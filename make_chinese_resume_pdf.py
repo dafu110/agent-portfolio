@@ -145,7 +145,7 @@ CONTENT_W = PAGE_W - 30 * mm
 
 name_style = style("Name", fontName=FONT_BOLD, fontSize=22, leading=25, textColor=INK)
 role_style = style("Role", fontName=FONT_BOLD, fontSize=11, leading=14, textColor=ACCENT)
-contact_style = style("Contact", fontSize=9, leading=12, textColor=MUTED)
+contact_style = style("Contact", fontSize=8.8, leading=10.2, textColor=MUTED)
 h2 = style("H2", fontName=FONT_BOLD, fontSize=12.3, leading=15, textColor=ACCENT)
 h3 = style("H3", fontName=FONT_BOLD, fontSize=10.8, leading=14, textColor=INK)
 body = style("Body", fontSize=10, leading=14.5, textColor=TEXT)
@@ -172,13 +172,13 @@ email_url = "mailto:poeticarch@163.com"
 header_copy = [
     p("傅孟涵", name_style),
     p("AI 应用产品经理 / AI 解决方案顾问", role_style),
-    Spacer(1, 1.5 * mm),
+    Spacer(1, 1.0 * mm),
     p(
         "北京 · 可在北京工作 · 随时到岗 · 现场 / 混合 / 远程均可<br/>"
         "电话 / 微信：15811203776　|　"
         f'<link href="{email_url}" color="#71717A">poeticarch@163.com</link>　|　'
-        f'<link href="{github_url}" color="#71717A">GitHub</link>　|　'
-        f'<link href="{portfolio_url}" color="#4F46E5">作品集</link>',
+        f'<link href="{github_url}" color="#71717A">GitHub</link><br/>'
+        f'作品集：<link href="{portfolio_url}" color="#4F46E5">{portfolio_url}</link>',
         contact_style,
     ),
 ]
@@ -187,7 +187,7 @@ header = Table([[header_copy, portrait]], colWidths=[CONTENT_W - 25 * mm, 25 * m
 header.setStyle(
     table_style(
         ("ALIGN", (1, 0), (1, 0), "RIGHT"),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
     )
 )
 

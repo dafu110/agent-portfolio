@@ -136,6 +136,7 @@ class ResumePdfTests(unittest.TestCase):
             "https://dafu110.github.io/agent-portfolio/",
         ):
             self.assertIn(expected, uris)
+        self.assertIn("https://dafu110.github.io/agent-portfolio/", self.text)
 
     def test_resume_copy_avoids_internal_evaluation_jargon(self):
         for jargon in ("fixture", "holdout", "黄金轨迹"):
