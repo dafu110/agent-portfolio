@@ -48,8 +48,8 @@
         <nav id="site-nav" class="nav" aria-label="页面导航">
           <a href="#profile">定位</a>
           <a href="#work">项目</a>
-          <a href="#experience">经历</a>
           <a href="#capability">能力</a>
+          <a href="#experience">经历</a>
           <a href="cases/index.html">证据室</a>
         </nav>
         <a class="header-action" href="assets/resume.pdf" target="_blank" rel="noopener noreferrer">查看简历</a>
@@ -67,9 +67,9 @@
             聚焦企业 AI 应用产品与解决方案，已独立完成 4 个可验证工作流原型；叠加 10 年复杂项目协同与方案交付经验。
           </p>
           <div class="hero-proof" aria-label="核心证据">
-            <div><strong>10 年</strong><span>复杂项目与跨专业协同</span></div>
             <div><strong>4 个</strong><span>企业 AI 应用原型</span></div>
             <div><strong>结果可复核</strong><span>测试与评测独立留痕</span></div>
+            <div><strong>跨专业交付</strong><span>需求、协调与汇报闭环</span></div>
           </div>
           <div class="action-row">
             <a class="button button-primary" href="#project-peopleops">查看旗舰案例 <span aria-hidden="true">↓</span></a>
@@ -123,7 +123,7 @@
             </div>
             <div class="flagship-evidence">
               <figure class="experience-shot flagship-shot">
-                <img src="assets/peopleops-intelligence-console.png" width="3072" height="1582" loading="lazy" decoding="async" alt="PeopleOps Intelligence Console，展示政策问答、候选人流程、审批、权限与审计状态" />
+                <img src="assets/peopleops-intelligence-console.png" width="2928" height="1582" loading="lazy" decoding="async" alt="PeopleOps Intelligence Console，展示政策问答、候选人流程、审批、权限与审计状态" />
                 <figcaption class="shot-caption"><span>产品界面</span><strong>政策回答、受控动作与审批状态进入同一工作台</strong><a href="cases/index.html#peopleops">查看产品证据</a></figcaption>
               </figure>
               <dl class="resume-facts">
@@ -133,15 +133,16 @@
               </dl>
             </div>
             <details id="peopleops-demo" class="video-disclosure">
-              <summary><span><strong>90 秒真实产品演示</strong><small>制度问答、引用证据、受控动作、人工审批与任务记录</small></span><em>展开播放</em></summary>
+              <summary><span><strong>播放 90 秒真实产品演示</strong><small>制度问答、引用证据、受控动作、人工审批与任务记录</small></span><em>展开播放</em></summary>
               <figure class="demo-video-block">
-                <div class="demo-video-frame">
-                  <video data-project="peopleops" controls playsinline preload="metadata" poster="assets/peopleops-intelligence-console.png" aria-label="PeopleOps Intelligence Agent 90 秒产品演示">
+                <div class="demo-video-frame" data-state="paused">
+                  <video data-project="peopleops" playsinline preload="metadata" poster="assets/peopleops-intelligence-console.png" aria-label="PeopleOps Intelligence Agent 90 秒产品演示">
                     <source src="assets/peopleops-real-agent-90s-1080p.mp4" type="video/mp4" />
                     <source src="assets/peopleops-real-agent-90s-1080p.webm" type="video/webm" />
                     <track kind="captions" src="assets/peopleops-demo-zh.vtt" srclang="zh" label="中文说明" />
                     当前浏览器不支持视频播放。<a href="assets/peopleops-real-agent-90s-1080p.mp4">打开 PeopleOps 演示视频</a>。
                   </video>
+                  <button class="demo-video-toggle" type="button" aria-label="播放 PeopleOps 演示视频"><span>播放</span></button>
                 </div>
                 <figcaption><strong>90 秒真实产品演示</strong><span>从制度问答与来源引用，到受控动作、人工审批和任务记录。画面已烧录中文字幕，播放器另提供可选择的中文说明轨。</span></figcaption>
               </figure>
@@ -152,7 +153,7 @@
           <div class="supporting-projects" aria-label="其他项目索引">
             <article id="project-researchops" class="supporting-project">
               <div class="supporting-head"><span>02 / Agent 工作流</span><p class="project-period"><time datetime="2026-07-08">2026.07.08</time>–<time datetime="2026-07-12">07.12</time></p></div>
-              <figure class="supporting-thumb crop-researchops"><img src="assets/researchops-dashboard.png" width="3072" height="1582" loading="lazy" decoding="async" alt="ResearchOps dashboard，展示任务规划、工具调用、审批与运行时间线" /></figure>
+              <figure class="supporting-thumb crop-researchops"><img src="assets/researchops-dashboard.png" width="1529" height="857" loading="lazy" decoding="async" alt="ResearchOps dashboard，展示任务规划、工具调用、审批与运行时间线" /></figure>
               <h3>ResearchOps</h3>
               <p>面向研究与分析团队，让规划、工具、审批与重试可观察，减少黑盒执行和上下文漂移。</p>
               <dl class="compact-facts"><div><dt>关键决策</dt><dd>审批后沿同一 run_id 恢复，保持上下文一致。</dd></div><div><dt>验证</dt><dd>32 条离线案例可复核。</dd></div></dl>
@@ -180,10 +181,27 @@
         </div>
       </section>
 
+      <section id="capability" class="section capability-section" aria-labelledby="capability-title">
+        <div class="container capability-layout">
+          <div class="section-title compact">
+            <p class="eyebrow">可迁移能力</p>
+            <h2 id="capability-title">能力结构</h2>
+            <p>从四个原型抽象出产品定义、可信知识、工具治理和交付表达；建筑经历作为复杂协同的迁移证据。</p>
+          </div>
+          <div class="capability-grid">
+            <section><span>01</span><h3>Agent 产品定义</h3><p>拆解用户、任务、状态、异常路径和人工介入点。</p></section>
+            <section><span>02</span><h3>RAG 与知识可信</h3><p>设计检索、权限过滤、引用、拒答和离线评测口径。</p></section>
+            <section><span>03</span><h3>工具调用治理</h3><p>处理 SQL、Python 沙箱、审批、审计和失败恢复边界。</p></section>
+            <section><span>04</span><h3>交付表达</h3><p>把系统判断、界面状态和验证证据整理成可复核材料。</p></section>
+          </div>
+        </div>
+      </section>
+
       <section id="experience" class="career-section container" aria-labelledby="experience-title">
         <div class="career-header">
-          <p class="eyebrow">经历摘要</p>
-          <h2 id="experience-title"><span>把复杂协同转化为</span><span>可复核的交付方案</span></h2>
+          <p class="eyebrow">迁移证据</p>
+          <h2 id="experience-title"><span>复杂协同经验</span><span>沉淀为交付能力</span></h2>
+          <p class="career-note">保留建筑项目经历，是为了说明跨专业沟通、约束拆解和方案汇报的长期训练；页面重心仍放在 AI 产品原型和可复核证据。</p>
         </div>
         <div class="career-content">
           <dl class="career-facts" aria-label="建筑设计任职经历">
@@ -225,28 +243,12 @@
               </div>
             </article>
             <article class="career-scheme">
-              <p>代表方案 02 · 大赋建筑</p>
+              <p>代表方案 02</p>
               <div>
                 <h3>乐清市盐盆山清和公园一体化建设工程—山顶建筑设计方案</h3>
                 <span>3657㎡ · 方案设计一等奖；以大跨度木结构和线性观景廊道串联观景、轻食、休憩与冥想空间。</span>
               </div>
             </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="capability" class="section capability-section" aria-labelledby="capability-title">
-        <div class="container capability-layout">
-          <div class="section-title compact">
-            <p class="eyebrow">可迁移能力</p>
-            <h2 id="capability-title">能力结构</h2>
-            <p>聚焦可迁移的 AI 产品与解决方案能力。</p>
-          </div>
-          <div class="capability-grid">
-            <section><span>01</span><h3>Agent 产品定义</h3><p>拆解用户、任务、状态、异常路径和人工介入点。</p></section>
-            <section><span>02</span><h3>RAG 与知识可信</h3><p>设计检索、权限过滤、引用、拒答和离线评测口径。</p></section>
-            <section><span>03</span><h3>工具调用治理</h3><p>处理 SQL、Python 沙箱、审批、审计和失败恢复边界。</p></section>
-            <section><span>04</span><h3>交付表达</h3><p>把系统判断、界面状态和验证证据整理成可复核材料。</p></section>
           </div>
         </div>
       </section>

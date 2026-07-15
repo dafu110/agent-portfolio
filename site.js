@@ -47,4 +47,30 @@
       if (!disclosure.open) disclosure.querySelector("video")?.pause();
     });
   });
+
+  document.querySelectorAll(".demo-video-frame").forEach((frame) => {
+    const video = frame.querySelector("video");
+    const button = frame.querySelector(".demo-video-toggle");
+    if (!(video instanceof HTMLVideoElement) || !(button instanceof HTMLButtonElement)) return;
+
+    const label = video.getAttribute("aria-label") || "演示视频";
+    const buttonLabel = button.querySelector("span");
+    const sync = () => {
+      const playing = !video.paused && !video.ended;
+      frame.dataset.state = playing ? "playing" : "paused";
+      button.setAttribute("aria-label", `${playing ? "暂停" : "播放"} ${label}`);
+      if (buttonLabel) buttonLabel.textContent = playing ? "暂停" : "播放";
+    };
+    const togglePlayback = () => {
+      if (video.paused || video.ended) video.play().catch(sync);
+      else video.pause();
+    };
+
+    button.addEventListener("click", togglePlayback);
+    video.addEventListener("click", togglePlayback);
+    video.addEventListener("play", sync);
+    video.addEventListener("pause", sync);
+    video.addEventListener("ended", sync);
+    sync();
+  });
 })();

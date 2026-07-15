@@ -93,8 +93,8 @@ class SiteAuditTests(unittest.TestCase):
         career_heading = re.search(r'<h2 id="experience-title">(.*?)</h2>', homepage, re.DOTALL)
         self.assertIsNotNone(career_heading)
         lines = re.findall(r"<span>(.*?)</span>", career_heading.group(1))
-        self.assertEqual(lines, ["把复杂协同转化为", "可复核的交付方案"])
-        self.assertEqual(len(lines[0]), len(lines[1]))
+        self.assertEqual(lines, ["复杂协同经验", "沉淀为交付能力"])
+        self.assertIn("建筑项目经历", homepage)
 
     def test_homepage_uses_verified_career_timeline_without_old_personal_fields(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -130,12 +130,12 @@ class SiteAuditTests(unittest.TestCase):
         experience = self.homepage_section(homepage, "experience")
         for evidence in (
             "乐清市盐盆山清和公园一体化建设工程—山顶建筑设计方案",
-            "大赋建筑",
             "3657㎡",
             "方案设计一等奖",
             "大跨度木结构",
         ):
             self.assertIn(evidence, experience)
+        self.assertNotIn("大赋建筑", experience)
         self.assertEqual(experience.count("代表方案"), 2)
         self.assertEqual(experience.count('class="career-scheme"'), 2)
         self.assertIn('class="career-schemes"', experience)
@@ -150,12 +150,12 @@ class SiteAuditTests(unittest.TestCase):
         stylesheet = (ROOT / "home.css").read_text(encoding="utf-8")
         for text in (
             "一个旗舰案例讲清产品判断，三个轻量项目补充能力边界；复现与评测统一进入证据室。",
-            "聚焦可迁移的 AI 产品与解决方案能力。",
+            "从四个原型抽象出产品定义、可信知识、工具治理和交付表达；建筑经历作为复杂协同的迁移证据。",
             "把模糊需求、多方协同与复杂约束，转为边界清晰、可测试、可追溯的企业 AI 工作流。",
         ):
             self.assertIn(text, homepage)
         self.assertIn(".flagship-shot .shot-caption strong", stylesheet)
-        self.assertIn("white-space: nowrap", stylesheet)
+        self.assertNotIn("white-space: nowrap", stylesheet)
         self.assertIn("min-width: 1200px", stylesheet)
         self.assertNotIn("min-width: 1120px", stylesheet)
         self.assertIn("求职方向", homepage)
@@ -260,9 +260,12 @@ class SiteAuditTests(unittest.TestCase):
             demos = [video for video in parser.videos if video.get("data-project") == "peopleops"]
             self.assertEqual(len(demos), 1, path)
             video = demos[0]
-            self.assertIn("controls", video, path)
+            self.assertNotIn("controls", video, path)
             self.assertEqual(video.get("preload"), "metadata", path)
             self.assertTrue(video.get("poster"), path)
+            controls = [button for button in parser.buttons if "demo-video-toggle" in button.get("class", "")]
+            self.assertEqual(len(controls), 1, path)
+            self.assertIn("aria-label", controls[0], path)
             sources = {source.get("type"): source for source in parser.sources}
             self.assertIn("video/mp4", sources, path)
             self.assertIn("video/webm", sources, path)
@@ -293,8 +296,10 @@ class SiteAuditTests(unittest.TestCase):
 
     def test_homepage_puts_ai_evidence_before_architecture_experience(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
-        self.assertLess(homepage.index('id="work"'), homepage.index('id="experience"'))
-        self.assertLess(homepage.index('href="#work"'), homepage.index('href="#experience"'))
+        self.assertLess(homepage.index('id="work"'), homepage.index('id="capability"'))
+        self.assertLess(homepage.index('id="capability"'), homepage.index('id="experience"'))
+        self.assertLess(homepage.index('href="#work"'), homepage.index('href="#capability"'))
+        self.assertLess(homepage.index('href="#capability"'), homepage.index('href="#experience"'))
         self.assertIn(
             "聚焦企业 AI 应用产品与解决方案，已独立完成 4 个可验证工作流原型",
             homepage,

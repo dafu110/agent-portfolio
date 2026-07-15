@@ -85,7 +85,8 @@
 
   .career-section {
     gap: 28px;
-    padding-top: 28px;
+    margin-top: 52px;
+    padding-top: 0;
   }
 
   .project-jump {
@@ -226,6 +227,12 @@
     grid-template-columns: 1fr;
     gap: 6px;
     padding-top: 14px;
+  }
+
+  .video-disclosure > summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .project-jump a {
@@ -456,7 +463,8 @@
   }
 
   .career-section {
-    padding-block: 24px 52px;
+    margin-top: 44px;
+    padding-block: 0 52px;
   }
 
   .career-header h2 {
@@ -465,8 +473,6 @@
   }
 
   .career-entry {
-    grid-template-columns: 1fr;
-    gap: 6px;
     padding-block: 14px;
   }
 
@@ -482,9 +488,12 @@
     font-size: 12px;
   }
 
-  .career-scheme {
+  .career-facts,
+  .career-schemes {
     grid-template-columns: 1fr;
-    gap: 6px;
+  }
+
+  .career-scheme {
     padding: 15px 14px;
   }
 
@@ -627,6 +636,8 @@
   }
 
   .flagship-evidence > .resume-facts div {
+    grid-template-columns: 1fr;
+    gap: 6px;
     min-height: auto;
     padding: 16px;
   }
@@ -652,6 +663,12 @@
 
   .supporting-thumb {
     aspect-ratio: 16 / 7;
+  }
+
+  .crop-researchops {
+    aspect-ratio: 1529 / 857;
+    --crop-scale: 1;
+    --crop-hover: 1.02;
   }
 
   .crop-data {

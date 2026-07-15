@@ -80,12 +80,12 @@ class ResumePdfTests(unittest.TestCase):
         compact_text = re.sub(r"\s+", "", self.text)
         for evidence in (
             "乐清市盐盆山清和公园一体化建设工程-山顶建筑设计方案",
-            "大赋建筑",
             "3657㎡",
             "方案设计一等奖",
             "大跨度木结构",
         ):
             self.assertIn(evidence, compact_text)
+        self.assertNotIn("大赋建筑", compact_text)
         self.assertEqual(compact_text.count("代表方案"), 2)
         self.assertIn("代表方案01齐河县国家现代农业产业园综合服务中心", compact_text)
         self.assertIn("代表方案02乐清市盐盆山清和公园一体化建设工程-山顶建筑设计方案", compact_text)

@@ -87,8 +87,8 @@ def table_style(*commands):
     )
 
 
-def section(title):
-    return [Spacer(1, 3.3 * mm), p(title, h2), Spacer(1, 1 * mm)]
+def section(title, before=3.3 * mm, after=1 * mm):
+    return [Spacer(1, before), p(title, h2), Spacer(1, after)]
 
 
 def bullet(text):
@@ -235,8 +235,8 @@ work = Table(
 work.setStyle(
     table_style(
         ("LINEBELOW", (0, 0), (-1, -2), 0.35, LINE),
-        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.1),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.1),
         ("RIGHTPADDING", (0, 0), (1, -1), 6),
     )
 )
@@ -253,20 +253,20 @@ representative_schemes = Table(
         [
             p("代表方案 02", small),
             p(
-                "<b>乐清市盐盆山清和公园一体化建设工程 - 山顶建筑设计方案</b> · 大赋建筑 · "
+                "<b>乐清市盐盆山清和公园一体化建设工程 - 山顶建筑设计方案</b> · "
                 "3657㎡ · 方案设计一等奖；大跨度木结构串联观景、休憩与冥想。",
                 small,
             ),
         ],
     ],
-    colWidths=[24 * mm, CONTENT_W - 24 * mm],
+    colWidths=[30 * mm, CONTENT_W - 30 * mm],
 )
 representative_schemes.setStyle(
     table_style(
         ("BACKGROUND", (0, 0), (-1, -1), SOFT),
         ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
-        ("TOPPADDING", (0, 0), (-1, -1), 3),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("TOPPADDING", (0, 0), (-1, -1), 3.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3.5),
         ("LEFTPADDING", (0, 0), (-1, -1), 5),
         ("RIGHTPADDING", (0, 0), (-1, -1), 5),
     )
@@ -327,7 +327,7 @@ story.extend(section("工作经历"))
 story.append(work)
 story.append(representative_schemes)
 
-story.extend(section("专业能力"))
+story.extend(section("专业能力", before=4.2 * mm, after=1.2 * mm))
 skills = Table(
     [[
         p("<b>产品与方案</b><br/>需求澄清、流程设计、PRD、原型、方案汇报、交付边界", body),
