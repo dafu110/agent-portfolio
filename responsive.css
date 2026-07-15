@@ -366,6 +366,10 @@
     gap: 32px;
   }
 
+  .flagship-evidence {
+    grid-template-columns: 1fr;
+  }
+
   .flagship-metrics {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -460,10 +464,14 @@
     font-size: 1.85rem;
   }
 
-  .career-facts div {
+  .career-entry {
     grid-template-columns: 1fr;
     gap: 6px;
-    padding-block: 16px;
+    padding-block: 14px;
+  }
+
+  .career-entry dt br {
+    display: none;
   }
 
   .career-facts dd strong {
@@ -472,6 +480,16 @@
 
   .career-facts dd span {
     font-size: 12px;
+  }
+
+  .career-scheme {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 15px 14px;
+  }
+
+  .career-scheme h3 {
+    font-size: 13px;
   }
 
   .portrait-panel {
@@ -603,16 +621,17 @@
     padding: 14px;
   }
 
-  .flagship-project > .resume-facts {
+  .flagship-evidence > .resume-facts {
     grid-template-columns: 1fr;
+    border-radius: 12px;
   }
 
-  .flagship-project > .resume-facts div {
+  .flagship-evidence > .resume-facts div {
     min-height: auto;
-    padding: 17px 0;
+    padding: 16px;
   }
 
-  .flagship-project > .resume-facts div + div {
+  .flagship-evidence > .resume-facts div + div {
     border-top: 1px solid var(--line);
     border-left: 0;
   }
@@ -629,6 +648,16 @@
     padding: 16px 16px 20px;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
+  }
+
+  .supporting-thumb {
+    aspect-ratio: 16 / 7;
+  }
+
+  .crop-data {
+    --crop-scale: 1.14;
+    --crop-hover: 1.17;
+    --crop-origin: 18% 18%;
   }
 
   .capability-grid section {

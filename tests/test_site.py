@@ -50,6 +50,17 @@ def parse(path):
 
 
 class SiteAuditTests(unittest.TestCase):
+    @staticmethod
+    def homepage_section(homepage, section_id):
+        match = re.search(
+            rf'<section id="{re.escape(section_id)}"(?:\s|>).*?</section>',
+            homepage,
+            re.DOTALL,
+        )
+        if not match:
+            raise AssertionError(f"missing section #{section_id}")
+        return match.group(0)
+
     def test_homepage_has_distinct_positioning_statement(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         visible_text = re.sub(r"<[^>]+>", "", homepage)
@@ -76,17 +87,63 @@ class SiteAuditTests(unittest.TestCase):
     def test_homepage_surfaces_relevant_experience_and_prototype_boundary(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         self.assertIn('id="experience"', homepage)
-        self.assertIn("建筑设计 / 项目负责人", homepage)
-        self.assertIn("个人 AI 应用项目实践", homepage)
-        self.assertIn("跨专业协调与评审交付", homepage)
-        self.assertIn("产品取舍", homepage)
-        self.assertIn("验证结果", homepage)
-        self.assertIn("25 条离线案例覆盖标准流程、知识检索与候选人安全场景", homepage)
+        self.assertIn("跨专业协调", homepage)
+        self.assertIn("评审交付", homepage)
+        self.assertNotIn("个人 AI 应用项目实践", homepage)
         career_heading = re.search(r'<h2 id="experience-title">(.*?)</h2>', homepage, re.DOTALL)
         self.assertIsNotNone(career_heading)
         lines = re.findall(r"<span>(.*?)</span>", career_heading.group(1))
         self.assertEqual(lines, ["把复杂协同转化为", "可复核的交付方案"])
         self.assertEqual(len(lines[0]), len(lines[1]))
+
+    def test_homepage_uses_verified_career_timeline_without_old_personal_fields(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        experience = self.homepage_section(homepage, "experience")
+        employers = (
+            "中国市政工程华北设计研究总院",
+            "北京土人城市规划设计股份有限公司",
+            "北京市建筑设计研究院股份有限公司",
+            "北京创研建筑设计中心",
+        )
+        for employer in employers:
+            self.assertIn(employer, experience)
+        self.assertEqual(experience.count('class="career-entry"'), 4)
+        self.assertIn("<dt>地点</dt><dd><strong>北京 · 可在北京工作</strong></dd>", homepage)
+        self.assertIn("<dt>状态</dt><dd><strong>随时到岗</strong><span>现场 / 混合 / 远程均可</span></dd>", homepage)
+        for private_or_stale in ("34 岁", "男", "15k", "20k", "建筑师、室内设计师"):
+            self.assertNotIn(private_or_stale, homepage)
+
+    def test_career_timeline_uses_verified_representative_project_scale(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        experience = self.homepage_section(homepage, "experience")
+        for evidence in (
+            "齐河县国家现代农业产业园综合服务中心",
+            "占地 5.25 万㎡",
+            "建筑面积 2.9 万㎡",
+            "外径 103.8 米",
+        ):
+            self.assertIn(evidence, experience)
+        self.assertNotIn("效率提升 60%", homepage)
+
+    def test_career_section_includes_second_public_representative_scheme(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        experience = self.homepage_section(homepage, "experience")
+        for evidence in (
+            "乐清市盐盆山清和公园一体化建设工程—山顶建筑设计方案",
+            "大赋建筑",
+            "3657㎡",
+            "方案设计一等奖",
+            "大跨度木结构",
+        ):
+            self.assertIn(evidence, experience)
+        self.assertEqual(experience.count("代表方案"), 2)
+        self.assertEqual(experience.count('class="career-scheme"'), 2)
+        self.assertIn('class="career-schemes"', experience)
+        self.assertNotIn('class="career-project"', experience)
+        self.assertNotIn("xhslink.com", experience)
+        self.assertNotIn("查看公开项目", experience)
+        self.assertNotIn("独立设计", experience)
+        self.assertNotIn("主创", experience)
 
     def test_desktop_section_copy_is_compact_and_unbroken(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -234,6 +291,27 @@ class SiteAuditTests(unittest.TestCase):
         self.assertEqual(evidence_room.count('class="project-period"'), 4)
         self.assertEqual(evidence_room.count('<span>关键决策</span>'), 4)
 
+    def test_homepage_puts_ai_evidence_before_architecture_experience(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertLess(homepage.index('id="work"'), homepage.index('id="experience"'))
+        self.assertLess(homepage.index('href="#work"'), homepage.index('href="#experience"'))
+        self.assertIn(
+            "聚焦企业 AI 应用产品与解决方案，已独立完成 4 个可验证工作流原型",
+            homepage,
+        )
+
+    def test_peopleops_homepage_proof_is_compact_without_metric_repetition(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        flagship = re.search(
+            r'<article id="project-peopleops".*?</article>', homepage, re.DOTALL
+        ).group(0)
+        self.assertIn('class="flagship-evidence"', flagship)
+        self.assertEqual(homepage.count("47 / 47"), 1)
+        self.assertEqual(homepage.count("25 / 25"), 1)
+        for label in ("产品问题", "产品判断", "业务价值"):
+            self.assertIn(f"<dt>{label}</dt>", flagship)
+        self.assertNotIn("<dt>验证结果</dt>", flagship)
+
     def test_homepage_projects_are_scan_focused(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         fact_groups = re.findall(r'<dl class="resume-facts">(.*?)</dl>', homepage, re.DOTALL)
@@ -246,7 +324,7 @@ class SiteAuditTests(unittest.TestCase):
             self.assertEqual(facts.count("<div>"), 3)
             self.assertIn("产品问题", facts)
             self.assertIn("产品判断", facts)
-            self.assertIn("验证结果", facts)
+            self.assertIn("业务价值", facts)
         self.assertNotIn("<dt>技术/系统边界</dt>", homepage)
         self.assertNotIn("<dt>GitHub README</dt>", homepage)
         evidence_room = (ROOT / "cases" / "index.html").read_text(encoding="utf-8")
@@ -271,7 +349,7 @@ class SiteAuditTests(unittest.TestCase):
         self.assertNotIn("公开版本集中开发", homepage)
 
     def test_project_periods_use_machine_readable_dates(self):
-        expected_counts = {ROOT / "index.html": 6, ROOT / "cases" / "index.html": 8}
+        expected_counts = {ROOT / "index.html": 8, ROOT / "cases" / "index.html": 8}
         for path, expected_count in expected_counts.items():
             text = path.read_text(encoding="utf-8")
             self.assertNotRegex(text, r'datetime="\d{4}-\d{2}-\d{2}/')
@@ -307,7 +385,9 @@ class SiteAuditTests(unittest.TestCase):
         evidence_room = (ROOT / "cases" / "index.html").read_text(encoding="utf-8")
         workflow = ROOT / ".github" / "workflows" / "pages.yml"
 
-        self.assertIn("开放 AI 产品与解决方案机会", homepage)
+        self.assertIn("北京 · 可在北京工作", homepage)
+        self.assertIn("随时到岗", homepage)
+        self.assertIn("现场 / 混合 / 远程均可", homepage)
         self.assertIn("HRBP 与招聘运营", homepage)
         for label in ("用户场景", "关键判断", "当前证据", "项目边界"):
             self.assertEqual(evidence_room.count(f"<span>{label}</span>"), 4)

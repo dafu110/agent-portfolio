@@ -88,7 +88,7 @@ def table_style(*commands):
 
 
 def section(title):
-    return [Spacer(1, 6 * mm), p(title, h2), Spacer(1, 2 * mm)]
+    return [Spacer(1, 3.3 * mm), p(title, h2), Spacer(1, 1 * mm)]
 
 
 def bullet(text):
@@ -97,22 +97,34 @@ def bullet(text):
     return row
 
 
-def project_line(name, value, evidence, link):
+def project_line(name, period, value, evidence, link):
     link_text = f'<link href="{link}" color="#4F46E5">查看仓库</link>'
     row = Table(
-        [[p(f"<b>{name}</b>", body_bold), p(value, body), p(f"{evidence}<br/>{link_text}", small)]],
+        [[
+            [p(f"<b>{name}</b>", body_bold), p(period, small)],
+            p(value, body),
+            p(f"{evidence}<br/>{link_text}", small),
+        ]],
         colWidths=[27 * mm, 75 * mm, CONTENT_W - 102 * mm],
     )
     row.setStyle(
         table_style(
             ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
-            ("TOPPADDING", (0, 0), (-1, -1), 7),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+            ("TOPPADDING", (0, 0), (-1, -1), 3.5),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 3.5),
             ("RIGHTPADDING", (0, 0), (0, -1), 5),
             ("RIGHTPADDING", (1, 0), (1, -1), 7),
         )
     )
     return row
+
+
+def career_line(period, employer, role, scope):
+    return [
+        p(period, small),
+        p(f"<b>{employer}</b><br/>{role}", body),
+        p(scope, small),
+    ]
 
 
 def draw_footer(canvas, doc):
@@ -146,7 +158,7 @@ doc = SimpleDocTemplate(
     pagesize=A4,
     rightMargin=15 * mm,
     leftMargin=15 * mm,
-    topMargin=12 * mm,
+    topMargin=10 * mm,
     bottomMargin=12 * mm,
     title="傅孟涵 - AI 应用产品经理 / AI 解决方案顾问",
     author="傅孟涵",
@@ -162,19 +174,20 @@ header_copy = [
     p("AI 应用产品经理 / AI 解决方案顾问", role_style),
     Spacer(1, 1.5 * mm),
     p(
+        "北京 · 可在北京工作 · 随时到岗 · 现场 / 混合 / 远程均可<br/>"
         "电话 / 微信：15811203776　|　"
         f'<link href="{email_url}" color="#71717A">poeticarch@163.com</link>　|　'
-        f'<link href="{github_url}" color="#71717A">GitHub</link><br/>'
-        f'<link href="{portfolio_url}" color="#4F46E5">作品集与项目证据室</link>',
+        f'<link href="{github_url}" color="#71717A">GitHub</link>　|　'
+        f'<link href="{portfolio_url}" color="#4F46E5">作品集</link>',
         contact_style,
     ),
 ]
-portrait = Image(str(ASSETS / "profile-portrait.jpg"), width=22 * mm, height=27.5 * mm)
+portrait = Image(str(ASSETS / "profile-portrait.jpg"), width=20 * mm, height=25 * mm)
 header = Table([[header_copy, portrait]], colWidths=[CONTENT_W - 25 * mm, 25 * mm])
 header.setStyle(
     table_style(
         ("ALIGN", (1, 0), (1, 0), "RIGHT"),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
     )
 )
 
@@ -183,30 +196,89 @@ story = [header, HRFlowable(width="100%", thickness=0.7, color=LINE)]
 story.extend(section("个人简介"))
 story.append(
     p(
-        "10 年建筑设计与复杂项目协同经验，转向企业 AI 应用产品与解决方案。"
-        "独立完成 4 个企业工作流原型，覆盖知识检索、工具调用、人工审批、评测与审计。"
-        "擅长把模糊需求转化为边界清晰、可验证、可交付的产品方案。",
+        "聚焦企业 AI 应用产品与解决方案，已独立完成 4 个可验证工作流原型，"
+        "覆盖 RAG、工具调用、人工审批、评测与审计；叠加 10 年复杂项目协同与方案交付经验，"
+        "擅长把模糊需求转化为边界清晰、可验证的产品方案。",
         body,
     )
 )
 
-story.extend(section("工作经历"))
 work = Table(
-    [[p("2015 至今", body_bold), [p("建筑设计 / 项目负责人", h3), bullet("负责方案设计、跨专业协调、图纸与汇报交付，推进需求澄清、方案评审和关键节点交付。"), bullet("长期处理多方诉求、复杂约束与变更风险，将问题拆解为可执行任务并推动闭环。"), bullet("将十年项目协同经验迁移到 AI 产品工作：明确用户场景、系统边界、验证方式与交付材料。")]]],
-    colWidths=[28 * mm, CONTENT_W - 28 * mm],
+    [
+        career_line(
+            "2023 - 至今",
+            "中国市政工程华北设计研究总院",
+            "项目负责人",
+            "公共建筑与市政配套；负责方案深化、跨专业协调与甲方汇报。",
+        ),
+        career_line(
+            "2017 - 2019、2021 - 2023",
+            "北京土人城市规划设计股份有限公司",
+            "项目负责人",
+            "文旅、产业园与公共服务项目的规划及建筑方案。",
+        ),
+        career_line(
+            "2019 - 2021",
+            "北京市建筑设计研究院股份有限公司",
+            "项目负责人",
+            "教育建筑与改造项目；推进方案、客户沟通与评审交付。",
+        ),
+        career_line(
+            "2015 - 2017",
+            "北京创研建筑设计中心",
+            "助理建筑师",
+            "参与校园、交通与医疗产业园的概念设计和方案深化。",
+        ),
+    ],
+    colWidths=[42 * mm, 52 * mm, CONTENT_W - 94 * mm],
 )
-work.setStyle(table_style(("RIGHTPADDING", (0, 0), (0, 0), 6)))
-story.append(work)
-
+work.setStyle(
+    table_style(
+        ("LINEBELOW", (0, 0), (-1, -2), 0.35, LINE),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
+        ("RIGHTPADDING", (0, 0), (1, -1), 6),
+    )
+)
+representative_schemes = Table(
+    [
+        [
+            p("代表方案 01", small),
+            p(
+                "<b>齐河县国家现代农业产业园综合服务中心</b> · 占地 5.25 万㎡ / 建筑面积 2.9 万㎡ / "
+                "环形结构外径 103.8 米；整合展馆、检测、研发、仓储与研学。",
+                small,
+            ),
+        ],
+        [
+            p("代表方案 02", small),
+            p(
+                "<b>乐清市盐盆山清和公园一体化建设工程 - 山顶建筑设计方案</b> · 大赋建筑 · "
+                "3657㎡ · 方案设计一等奖；大跨度木结构串联观景、休憩与冥想。",
+                small,
+            ),
+        ],
+    ],
+    colWidths=[24 * mm, CONTENT_W - 24 * mm],
+)
+representative_schemes.setStyle(
+    table_style(
+        ("BACKGROUND", (0, 0), (-1, -1), SOFT),
+        ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
+        ("TOPPADDING", (0, 0), (-1, -1), 3),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("LEFTPADDING", (0, 0), (-1, -1), 5),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 5),
+    )
+)
 story.extend(section("AI 项目经历"))
 flagship = Table(
     [[
-        [p("PeopleOps 智能工作台", h3), p("旗舰项目 · 产品设计 / 原型实现 / 评测", small)],
+        [p("PeopleOps 智能工作台", h3), p("2026.07 · 旗舰项目<br/>产品设计 / 原型实现 / 评测", small)],
         [
-            p("<b>用户问题：</b>HR 政策问答、候选人处理、审批与审计分散，结论来源和执行责任难以复核。", body),
-            p("<b>产品方案：</b>统一知识引用、候选人分析、动作草稿、人工审批和操作记录；高风险动作必须确认后执行。", body),
-            p("<b>业务价值：</b>帮助 HR 与业务负责人更快核对信息来源、审批责任和执行状态，降低误操作与返工风险。", body),
-            p("<b>验证结果：</b>47 / 47 项单元测试、25 / 25 个离线案例通过；结果仅代表当前原型与样例集。", body),
+            p("<b>方案：</b>政策证据、候选人动作与审批进入同一工作流；高风险动作须人工确认。", body),
+            p("<b>价值：</b>更快核对来源、责任与状态，降低误操作和返工风险。", body),
+            p("<b>验证：</b>47 / 47 项测试、25 / 25 个离线案例通过；仅代表当前原型与样例集。", body),
             p(f'<link href="{github_url}/peopleops-agent" color="#4F46E5">GitHub 仓库</link>　·　<link href="{portfolio_url}#peopleops-demo" color="#4F46E5">90 秒演示</link>', small),
         ],
     ]],
@@ -218,14 +290,15 @@ flagship.setStyle(
         ("BOX", (0, 0), (-1, -1), 0.5, LINE),
         ("LEFTPADDING", (0, 0), (-1, -1), 7),
         ("RIGHTPADDING", (0, 0), (-1, -1), 7),
-        ("TOPPADDING", (0, 0), (-1, -1), 7),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+        ("TOPPADDING", (0, 0), (-1, -1), 5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
     )
 )
 story.append(flagship)
 story.append(
     project_line(
         "ResearchOps",
+        "2026.07",
         "将研究任务、工具执行、审批与运行状态放进可观察流程。",
         "32 个离线案例覆盖主要路径。",
         f"{github_url}/researchops-agent",
@@ -234,6 +307,7 @@ story.append(
 story.append(
     project_line(
         "KnowFlow",
+        "2026.07",
         "企业知识检索与引用回答，加入权限过滤、拒答和质量检查。",
         "检索与引用门槛可重复验证。",
         f"{github_url}/knowflow-rag-agent",
@@ -242,11 +316,16 @@ story.append(
 story.append(
     project_line(
         "Data Analyst",
+        "2026.07",
         "受控查询、字段理解、质量检查与多格式报告导出。",
         "覆盖查询隔离与交付文件生成。",
         f"{github_url}/data-analyst-agent",
     )
 )
+
+story.extend(section("工作经历"))
+story.append(work)
+story.append(representative_schemes)
 
 story.extend(section("专业能力"))
 skills = Table(
@@ -262,8 +341,8 @@ skills.setStyle(
         ("LINEBEFORE", (1, 0), (-1, -1), 0.35, LINE),
         ("LEFTPADDING", (1, 0), (-1, -1), 6),
         ("RIGHTPADDING", (0, 0), (1, -1), 6),
-        ("TOPPADDING", (0, 0), (-1, -1), 4),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ("TOPPADDING", (0, 0), (-1, -1), 2.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 2.5),
     )
 )
 story.append(skills)
