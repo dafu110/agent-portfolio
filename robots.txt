@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dafu110.github.io/agent-portfolio/sitemap.xml

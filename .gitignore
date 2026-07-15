@@ -1,0 +1,22 @@
+# Local preview and generated review artifacts
+output/
+tmp/
+.playwright-cli/
+.pytest_cache/
+
+# Internal planning notes kept locally
+findings.md
+progress.md
+task_plan.md
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local environment and editor files
+.env
+.env.*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,50 @@
+{
+  "project": "peopleops-intelligence-agent",
+  "run_date": "2026-07-13",
+  "repository_period": {
+    "from": "2026-06-16",
+    "to": "2026-07-12"
+  },
+  "revision_context": {
+    "fix_commit": "dfa4bd6",
+    "description": "Derive tenant scope from OIDC or trusted SSO identity and reject spoofed client tenant headers."
+  },
+  "model_context": {
+    "mode": "deterministic_fixture",
+    "generation_model_called": false,
+    "configured_chat_model": "deepseek-chat",
+    "configured_embedding_model": "BAAI/bge-small-zh-v1.5"
+  },
+  "sample_size": {
+    "unit_tests": 47,
+    "offline_cases": 25,
+    "golden_traces": 10,
+    "rag_fixtures": 10,
+    "candidate_safety_cases": 5
+  },
+  "results": {
+    "unit_tests_passed": 47,
+    "offline_cases_passed": 25,
+    "rag_fixture_pass_rate": 1.0,
+    "rag_fixture_citation_correctness": 1.0,
+    "pii_leakage_cases": 0
+  },
+  "failure_case": {
+    "before": "Client tenant headers could influence tenant scope even when an authenticated identity should be authoritative.",
+    "risk": "A spoofed tenant header could cross the intended tenant boundary.",
+    "fix_commit": "dfa4bd6",
+    "fix": "Derive tenant scope from OIDC or trusted SSO claims, ignore spoofed client tenant headers, and fail closed when authentication is not configured.",
+    "regression_evidence": "OIDC and trusted-SSO tests now send spoofed tenant headers and assert the identity-derived tenant; unconfigured local authentication returns 503."
+  },
+  "limitations": [
+    "Fixture evaluation does not call an external generative model.",
+    "Results do not represent production user outcomes or external connector availability.",
+    "Runtime model quality must be evaluated separately with approved, representative data."
+  ],
+  "commands": [
+    "python -m unittest discover -s backend/tests -v",
+    "python backend/scripts/evaluate_agent_traces.py",
+    "python backend/scripts/evaluate_rag.py --fixture-eval",
+    "python backend/scripts/evaluate_candidate_assistance.py"
+  ]
+}
