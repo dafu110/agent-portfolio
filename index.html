@@ -79,18 +79,18 @@
 
         <aside class="profile-stack" aria-label="候选人摘要">
           <div class="portrait-panel">
-            <img src="assets/profile-portrait.jpg" width="640" height="800" alt="傅孟涵免冠照" />
+            <img src="assets/profile-portrait.png" width="1122" height="1402" alt="傅孟涵免冠照" />
             <p><span>求职方向</span><strong>AI 产品与解决方案岗位</strong></p>
           </div>
           <div class="evidence-panel">
             <dl>
-              <div><dt>经历</dt><dd><strong>2015 至今 · 四家设计机构</strong><span>项目负责人 / 助理建筑师</span></dd></div>
+              <div><dt>经历</dt><dd><strong>2015 至今 · 四家设计机构</strong><span>从助理建筑师到项目负责人</span></dd></div>
               <div><dt>在读</dt><dd><strong>人工智能与大数据工学硕士</strong><span>拟于 2027 年 9 月毕业</span></dd></div>
               <div><dt>项目</dt><dd><strong>4 个企业 AI 应用原型</strong><span>本地样例集与离线评测</span></dd></div>
               <div><dt>地点</dt><dd><strong>北京 · 可在北京工作</strong></dd></div>
               <div><dt>状态</dt><dd><strong>随时到岗</strong><span>现场 / 混合 / 远程均可</span></dd></div>
             </dl>
-            <a href="mailto:poeticarch@163.com">poeticarch@163.com <span aria-hidden="true">↗</span></a>
+            <button class="contact-link" type="button" data-contact-open>poeticarch@163.com <span aria-hidden="true">↗</span></button>
           </div>
         </aside>
       </section>
@@ -262,7 +262,7 @@
           <p>把模糊需求、多方协同与复杂约束，转为边界清晰、可测试、可追溯的企业 AI 工作流。</p>
           <p>我关注产品判断如何落进状态、权限、证据与人工审批，而不只停留在模型能力展示。</p>
           <div class="background-actions">
-            <a class="button button-primary" href="mailto:poeticarch@163.com">联系我</a>
+            <button class="button button-primary" type="button" data-contact-open>联系我</button>
             <a class="button button-secondary" href="assets/resume.pdf" target="_blank" rel="noopener noreferrer">查看简历</a>
           </div>
         </div>
@@ -276,12 +276,31 @@
           <span>AI Agent 产品与解决方案作品集</span>
         </div>
         <div class="footer-links">
-          <a href="mailto:poeticarch@163.com">poeticarch@163.com</a>
+          <button class="contact-link" type="button" data-contact-open>poeticarch@163.com</button>
           <a href="https://github.com/dafu110" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href="cases/index.html">项目证据室</a>
         </div>
       </div>
     </footer>
+
+    <div class="contact-dialog" data-contact-dialog hidden role="dialog" aria-modal="true" aria-labelledby="contact-title">
+      <div class="contact-backdrop" data-contact-close></div>
+      <section class="contact-panel" role="document" tabindex="-1">
+        <button class="contact-close" type="button" data-contact-close aria-label="关闭联系方式">关闭</button>
+        <p class="eyebrow">Contact</p>
+        <h2 id="contact-title">联系我</h2>
+        <p>可直接复制邮箱发送邀约或沟通岗位，我会尽快回复。</p>
+        <div class="contact-email">
+          <span>邮箱</span>
+          <strong data-contact-email>poeticarch@163.com</strong>
+        </div>
+        <div class="contact-actions">
+          <button class="button button-primary" type="button" data-copy-email>复制邮箱</button>
+          <a class="button button-secondary" href="mailto:poeticarch@163.com">打开邮件客户端</a>
+        </div>
+        <p class="contact-status" data-contact-status role="status" aria-live="polite"></p>
+      </section>
+    </div>
 
     <script src="site.js" defer></script>
   </body>

@@ -73,4 +73,69 @@
     video.addEventListener("ended", sync);
     sync();
   });
+
+  const contactDialog = document.querySelector("[data-contact-dialog]");
+  const contactPanel = contactDialog?.querySelector(".contact-panel");
+  const contactStatus = contactDialog?.querySelector("[data-contact-status]");
+  const emailTarget = contactDialog?.querySelector("[data-contact-email]");
+  const copyEmailButton = contactDialog?.querySelector("[data-copy-email]");
+  let contactReturnTarget = null;
+
+  const copyToClipboard = async (text) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const field = document.createElement("textarea");
+    field.value = text;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.append(field);
+    field.select();
+    document.execCommand("copy");
+    field.remove();
+  };
+
+  const openContact = (trigger) => {
+    if (!(contactDialog instanceof HTMLElement)) return;
+    contactReturnTarget = trigger instanceof HTMLElement ? trigger : null;
+    contactDialog.hidden = false;
+    document.body.style.overflow = "hidden";
+    if (contactStatus) contactStatus.textContent = "";
+    if (contactPanel instanceof HTMLElement) contactPanel.focus();
+  };
+
+  const closeContact = ({ restoreFocus = false } = {}) => {
+    if (!(contactDialog instanceof HTMLElement) || contactDialog.hidden) return;
+    contactDialog.hidden = true;
+    document.body.style.overflow = "";
+    if (contactStatus) contactStatus.textContent = "";
+    if (restoreFocus) contactReturnTarget?.focus();
+  };
+
+  document.querySelectorAll("[data-contact-open]").forEach((trigger) => {
+    trigger.addEventListener("click", () => openContact(trigger));
+  });
+
+  contactDialog?.querySelectorAll("[data-contact-close]").forEach((trigger) => {
+    trigger.addEventListener("click", () => closeContact({ restoreFocus: true }));
+  });
+
+  copyEmailButton?.addEventListener("click", async () => {
+    const email = emailTarget?.textContent?.trim();
+    if (!email) return;
+
+    try {
+      await copyToClipboard(email);
+      if (contactStatus) contactStatus.textContent = "邮箱已复制，可以直接粘贴发送。";
+    } catch (_error) {
+      if (contactStatus) contactStatus.textContent = `复制失败，请手动复制：${email}`;
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeContact({ restoreFocus: true });
+  });
 })();

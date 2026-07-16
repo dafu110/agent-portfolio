@@ -545,7 +545,7 @@
   }
 
   .evidence-panel dd span,
-  .evidence-panel > a {
+  .evidence-panel > .contact-link {
     font-size: 10px;
   }
 
@@ -727,5 +727,18 @@
 
   .background-copy {
     font-size: 13px;
+  }
+
+  .contact-dialog {
+    align-items: end;
+    padding: 14px;
+  }
+
+  .contact-panel {
+    padding: 22px 18px 18px;
+  }
+
+  .contact-actions {
+    display: grid;
   }
 }

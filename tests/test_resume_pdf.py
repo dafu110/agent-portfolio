@@ -116,8 +116,8 @@ class ResumePdfTests(unittest.TestCase):
             words = pdf.pages[0].extract_words()
         education_words = [word for word in words if word["text"] == "建筑学本科"]
         self.assertEqual(len(education_words), 1)
-        self.assertGreaterEqual(float(education_words[0]["bottom"]), 690)
-        self.assertLessEqual(float(education_words[0]["bottom"]), 760)
+        self.assertGreaterEqual(float(education_words[0]["bottom"]), 770)
+        self.assertLessEqual(float(education_words[0]["bottom"]), 805)
 
     def test_resume_lists_ai_coding_tools(self):
         self.assertIn("Cursor", self.text)

@@ -168,6 +168,19 @@ class SiteAuditTests(unittest.TestCase):
             self.assertNotRegex(text, r"158\s*1120\s*3776", path)
             self.assertNotIn('"telephone"', text, path)
 
+    def test_homepage_contact_cta_uses_inline_dialog(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        background_actions = re.search(
+            r'<div class="background-actions">(.*?)</div>',
+            homepage,
+            re.DOTALL,
+        )
+        self.assertIsNotNone(background_actions)
+        self.assertIn("data-contact-open", background_actions.group(1))
+        self.assertNotIn("mailto:", background_actions.group(1))
+        self.assertIn("data-contact-dialog", homepage)
+        self.assertIn("data-copy-email", homepage)
+
     def test_local_links_and_fragments_exist(self):
         for path in HTML_FILES:
             parser = parse(path)

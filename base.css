@@ -58,6 +58,16 @@ a {
   color: inherit;
 }
 
+.contact-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -174,7 +184,8 @@ article[id] {
 
 .nav a,
 .header-action,
-.footer-links a {
+.footer-links a,
+.footer-links .contact-link {
   color: var(--muted);
   font-size: 13px;
   font-weight: 650;
@@ -186,7 +197,9 @@ article[id] {
 .header-action:hover,
 .header-action:focus-visible,
 .footer-links a:hover,
-.footer-links a:focus-visible {
+.footer-links a:focus-visible,
+.footer-links .contact-link:hover,
+.footer-links .contact-link:focus-visible {
   color: var(--ink);
 }
 
@@ -405,9 +418,11 @@ h3 {
   border: 1px solid var(--line-dark);
   border-radius: var(--radius-sm);
   color: var(--ink);
+  font: inherit;
   font-size: 13px;
   font-weight: 650;
   text-decoration: none;
+  cursor: pointer;
   transition: background-color var(--motion-fast), border-color var(--motion-fast), color var(--motion-fast), transform var(--motion-fast);
 }
 
