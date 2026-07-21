@@ -773,12 +773,12 @@
 
 .background-section h2 {
   font-size: clamp(2.4rem, 3.4vw, 3.35rem);
+  white-space: nowrap;
 }
 
 @media (min-width: 981px) and (max-width: 1199px) {
   .background-section h2 {
     font-size: clamp(2.1rem, 3vw, 2.8rem);
-    white-space: normal;
   }
 }
 
