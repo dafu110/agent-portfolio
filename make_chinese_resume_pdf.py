@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 import shutil
 
@@ -22,8 +23,32 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parent
 OUT_DIR = ROOT / "output" / "pdf"
 ASSETS = ROOT / "assets"
-FINAL_PDF = OUT_DIR / "fu-menghan-ai-agent-resume-one-page.pdf"
-WEB_RESUME = ASSETS / "resume.pdf"
+
+parser = argparse.ArgumentParser(description="Generate a targeted one-page Chinese resume PDF.")
+parser.add_argument("--variant", choices=("product", "engineer"), default="product")
+args = parser.parse_args()
+IS_ENGINEER = args.variant == "engineer"
+
+if IS_ENGINEER:
+    FINAL_PDF = OUT_DIR / "fu-menghan-ai-agent-engineer-resume-one-page.pdf"
+    WEB_RESUME = ASSETS / "resume-agent-engineer.pdf"
+    ROLE_TITLE = "AI Agent 开发工程师 / AI 应用工程师"
+    SUMMARY = (
+        "聚焦企业 AI Agent 开发与应用工程，已独立完成 4 个可验证工作流原型，"
+        "覆盖 RAG、工具调用、人工审批、评测与审计；能够使用 Python、FastAPI、LangGraph 与 React "
+        "完成原型开发、调试和测试，并结合 10 年复杂项目经验推进需求与交付。"
+    )
+    FLAGSHIP_ROLE = "独立完成 · Agent 工作流 / 前后端 / 测试"
+else:
+    FINAL_PDF = OUT_DIR / "fu-menghan-ai-agent-resume-one-page.pdf"
+    WEB_RESUME = ASSETS / "resume.pdf"
+    ROLE_TITLE = "AI Agent 产品经理 / AI 解决方案顾问"
+    SUMMARY = (
+        "聚焦企业 AI Agent 产品与解决方案，已独立完成 4 个可验证工作流原型，"
+        "负责需求拆解、工作流设计、前后端原型与测试评测；叠加 10 年复杂项目协同与交付经验，"
+        "擅长把模糊需求转化为边界清晰、可验证的产品方案。"
+    )
+    FLAGSHIP_ROLE = "独立完成 · 产品设计 / 原型实现 / 评测"
 
 FONT_REGULAR = "ResumeRegular"
 FONT_BOLD = "ResumeBold"
@@ -110,8 +135,8 @@ def project_line(name, period, value, evidence, link):
     row.setStyle(
         table_style(
             ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
-            ("TOPPADDING", (0, 0), (-1, -1), 4.8),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 4.8),
+            ("TOPPADDING", (0, 0), (-1, -1), 7.9),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 7.9),
             ("RIGHTPADDING", (0, 0), (0, -1), 5),
             ("RIGHTPADDING", (1, 0), (1, -1), 7),
         )
@@ -131,7 +156,7 @@ def draw_footer(canvas, doc):
     canvas.saveState()
     canvas.setFillColor(MUTED)
     canvas.setFont(FONT_REGULAR, 7.5)
-    canvas.drawString(15 * mm, 7.5 * mm, "傅孟涵 · AI 应用产品经理 / AI 解决方案顾问")
+    canvas.drawString(15 * mm, 7.5 * mm, f"傅孟涵 · {ROLE_TITLE}")
     canvas.drawRightString(195 * mm, 7.5 * mm, "一页简历 · 2026-07")
     canvas.restoreState()
 
@@ -151,6 +176,7 @@ h3 = style("H3", fontName=FONT_BOLD, fontSize=10.8, leading=14, textColor=INK)
 body = style("Body", fontSize=10, leading=14.5, textColor=TEXT)
 body_bold = style("BodyBold", fontName=FONT_BOLD, fontSize=10, leading=14.5, textColor=INK)
 small = style("Small", fontSize=9, leading=12.5, textColor=MUTED)
+skill_body = style("SkillBody", fontSize=8.7, leading=11.4, textColor=TEXT)
 bullet_mark = style("BulletMark", fontName=FONT_BOLD, fontSize=10, leading=14.5, textColor=ACCENT)
 flagship_body = style("FlagshipBody", fontSize=10, leading=14.7, textColor=TEXT, spaceAfter=1.3)
 work_employer = style("WorkEmployer", fontName=FONT_BOLD, fontSize=9.3, leading=11.5, textColor=INK)
@@ -166,7 +192,7 @@ doc = SimpleDocTemplate(
     leftMargin=15 * mm,
     topMargin=10 * mm,
     bottomMargin=12 * mm,
-    title="傅孟涵 - AI 应用产品经理 / AI 解决方案顾问",
+    title=f"傅孟涵 - {ROLE_TITLE}",
     author="傅孟涵",
     subject="一页中文求职简历",
 )
@@ -177,7 +203,7 @@ email_url = "mailto:poeticarch@163.com"
 
 header_copy = [
     p("傅孟涵", name_style),
-    p("AI 应用产品经理 / AI 解决方案顾问", role_style),
+    p(ROLE_TITLE, role_style),
     Spacer(1, 1.0 * mm),
     p(
         "北京 · 可在北京工作 · 随时到岗 · 现场 / 混合 / 远程均可<br/>"
@@ -200,14 +226,7 @@ header.setStyle(
 story = [header, HRFlowable(width="100%", thickness=0.7, color=LINE)]
 
 story.extend(section("个人简介", after=1.25 * mm))
-story.append(
-    p(
-        "聚焦企业 AI 应用产品与解决方案，已独立完成 4 个可验证工作流原型，"
-        "覆盖 RAG、工具调用、人工审批、评测与审计；叠加 10 年复杂项目协同与方案交付经验，"
-        "擅长把模糊需求转化为边界清晰、可验证的产品方案。",
-        body,
-    )
-)
+story.append(p(SUMMARY, body))
 
 work = Table(
     [
@@ -215,19 +234,13 @@ work = Table(
             "2023 - 至今",
             "中国市政工程华北设计研究总院",
             "项目负责人",
-            "公共建筑与市政配套；负责方案深化、跨专业协调与甲方汇报。",
+            "公共建筑与市政配套；负责需求澄清、跨专业协调与甲方汇报。",
         ),
         career_line(
-            "2017 - 2019、2021 - 2023",
-            "北京土人城市规划设计股份有限公司",
+            "2017 - 2023",
+            "北京土人城市规划设计股份有限公司 / 北京市建筑设计研究院股份有限公司",
             "项目负责人",
-            "文旅、产业园与公共服务项目的规划及建筑方案。",
-        ),
-        career_line(
-            "2019 - 2021",
-            "北京市建筑设计研究院股份有限公司",
-            "项目负责人",
-            "教育建筑与改造项目；推进方案、客户沟通与评审交付。",
+            "文旅、产业园、教育与公共服务项目；推进方案、客户沟通与评审交付。",
         ),
         career_line(
             "2015 - 2017",
@@ -241,26 +254,18 @@ work = Table(
 work.setStyle(
     table_style(
         ("LINEBELOW", (0, 0), (-1, -2), 0.35, LINE),
-        ("TOPPADDING", (0, 0), (-1, -1), 3.7),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 3.7),
+        ("TOPPADDING", (0, 0), (-1, -1), 3.1),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3.1),
         ("RIGHTPADDING", (0, 0), (1, -1), 5.5),
     )
 )
 representative_schemes = Table(
     [
         [
-            p("代表方案 01", scheme_label),
+            p("代表交付", scheme_label),
             p(
                 "<b>齐河县国家现代农业产业园综合服务中心</b> · 占地 5.25 万㎡ / 建筑面积 2.9 万㎡ / "
-                "环形结构外径 103.8 米；整合展馆、检测、研发、仓储与研学。",
-                scheme_text,
-            ),
-        ],
-        [
-            p("代表方案 02", scheme_label),
-            p(
-                "<b>乐清市盐盆山清和公园一体化建设工程 - 山顶建筑设计方案</b> · "
-                "3657㎡ · 方案设计一等奖；大跨度木结构串联观景、休憩与冥想。",
+                "环形结构外径 103.8 米；<b>乐清盐盆山山顶建筑方案</b> · 3657㎡ · 方案设计一等奖 / 大跨度木结构。",
                 scheme_text,
             ),
         ],
@@ -270,9 +275,8 @@ representative_schemes = Table(
 representative_schemes.setStyle(
     table_style(
         ("BACKGROUND", (0, 0), (-1, -1), SOFT),
-        ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
-        ("TOPPADDING", (0, 0), (-1, -1), 4.6),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 4.6),
+        ("TOPPADDING", (0, 0), (-1, -1), 6.5),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6.5),
         ("LEFTPADDING", (0, 0), (-1, -1), 4.5),
         ("RIGHTPADDING", (0, 0), (-1, -1), 4.5),
     )
@@ -280,12 +284,26 @@ representative_schemes.setStyle(
 story.extend(section("AI 项目经历", before=4.8 * mm, after=1.8 * mm))
 flagship = Table(
     [[
-        [p("PeopleOps 智能工作台", h3), p("2026.07 · 旗舰项目<br/>产品设计 / 原型实现 / 评测", small)],
+        [p("PeopleOps 智能工作台", h3), p(f"2026.07 · 旗舰项目<br/>{FLAGSHIP_ROLE}", small)],
         [
-            p("<b>方案：</b>政策证据、候选人动作与审批进入同一工作流；高风险动作须人工确认。", flagship_body),
-            p("<b>价值：</b>更快核对来源、责任与状态，降低误操作和返工风险。", flagship_body),
+            p(
+                "<b>实现：</b>" + (
+                    "RAG 来源证据、候选人动作、审批恢复、权限与审计进入同一 Agent 工作流。"
+                    if IS_ENGINEER else
+                    "政策证据、候选人动作与人工审批进入同一工作流；高风险动作须人工确认。"
+                ),
+                flagship_body,
+            ),
+            p(
+                "<b>个人贡献：</b>" + (
+                    "独立完成工作流、前后端原型、测试评测；使用 Python / FastAPI / LangGraph / React。"
+                    if IS_ENGINEER else
+                    "独立完成需求拆解、产品与工作流设计、前后端原型、测试评测及演示交付。"
+                ),
+                flagship_body,
+            ),
             p("<b>验证：</b>47 / 47 项测试、25 / 25 个离线案例通过；仅代表当前原型与样例集。", flagship_body),
-            p(f'<link href="{github_url}/peopleops-agent" color="#4F46E5">GitHub 仓库</link>　·　<link href="{portfolio_url}#peopleops-demo" color="#4F46E5">90 秒演示</link>', small),
+            p(f'<link href="{github_url}/peopleops-intelligence-agent" color="#4F46E5">GitHub 仓库</link>　·　<link href="{portfolio_url}#peopleops-demo" color="#4F46E5">90 秒演示</link>', small),
         ],
     ]],
     colWidths=[45 * mm, CONTENT_W - 45 * mm],
@@ -305,8 +323,8 @@ story.append(
     project_line(
         "ResearchOps",
         "2026.07",
-        "将研究任务、工具执行、审批与运行状态放进可观察流程。",
-        "32 个离线案例覆盖主要路径。",
+        "实现 Planner、工具执行、审批恢复与运行状态追踪。" if IS_ENGINEER else "将研究任务、工具执行、审批与运行状态放进可观察流程。",
+        "Planner / run_id / 审批恢复；32 个离线案例覆盖主要路径。",
         f"{github_url}/researchops-agent",
     )
 )
@@ -314,8 +332,8 @@ story.append(
     project_line(
         "KnowFlow",
         "2026.07",
-        "企业知识检索与引用回答，加入权限过滤、拒答和质量检查。",
-        "检索与引用门槛可重复验证。",
+        "实现 ACL 先行过滤、检索、引用、拒答与质量门禁。" if IS_ENGINEER else "企业知识检索与引用回答，加入权限过滤、拒答和质量检查。",
+        "ACL / 引用 / 拒答；检索与引用门槛可重复验证。",
         f"{github_url}/knowflow-rag-agent",
     )
 )
@@ -323,8 +341,8 @@ story.append(
     project_line(
         "Data Analyst",
         "2026.07",
-        "受控查询、字段理解、质量检查与多格式报告导出。",
-        "覆盖查询隔离与交付文件生成。",
+        "实现计划审批、只读 SQL / Python 沙箱与报告导出。" if IS_ENGINEER else "受控查询、字段理解、质量检查与多格式报告导出。",
+        "只读 SQL / Docker 隔离；覆盖查询与交付文件生成。",
         f"{github_url}/data-analyst-agent",
     )
 )
@@ -334,11 +352,23 @@ story.append(work)
 story.append(representative_schemes)
 
 story.extend(section("专业能力", before=5.4 * mm, after=1.4 * mm))
+if IS_ENGINEER:
+    skill_columns = [
+        "<b>Agent 工程</b><br/>Python / FastAPI、LangGraph、OpenAI Agents SDK、Tool Calling、状态与审批恢复",
+        "<b>RAG 与质量</b><br/>检索 / ACL、引用与拒答、评测回归、权限过滤、审计与安全边界",
+        "<b>应用交付</b><br/>Next.js / React、SQL / Docker、Git；Cursor / Codex 辅助开发、调试、测试与文档",
+    ]
+else:
+    skill_columns = [
+        "<b>产品与方案</b><br/>需求澄清、流程 / 状态、PRD / 原型、方案汇报、交付边界",
+        "<b>AI 应用与治理</b><br/>RAG / Agent、Tool Calling、人工审批、权限过滤、评测回归、审计",
+        "<b>工程与 AI Coding</b><br/>Python / FastAPI、React、LangGraph / Agents SDK、SQL / Docker；Cursor / Codex",
+    ]
 skills = Table(
     [[
-        p("<b>产品与方案</b><br/>需求澄清、流程设计、PRD、原型、方案汇报、交付边界", body),
-        p("<b>AI 应用</b><br/>RAG、Tool Calling、人工审批、评测回归、审计追踪", body),
-        p("<b>工程与 AI 协作</b><br/>Python、FastAPI、Next.js、SQL、Cursor、OpenAI Codex", body),
+        p(skill_columns[0], skill_body),
+        p(skill_columns[1], skill_body),
+        p(skill_columns[2], skill_body),
     ]],
     colWidths=[CONTENT_W / 3] * 3,
 )

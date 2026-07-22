@@ -1,6 +1,6 @@
 # AI Agent Portfolio
 
-这是一个静态作品集网页，用于展示傅孟涵从建筑设计背景转向 AI Agent、AI 解决方案、AI 产品经理岗位的核心能力。
+这是一个静态作品集网页，用于展示傅孟涵面向 AI Agent 产品、AI 应用工程与 AI 解决方案岗位的产品判断、工程实现和可验证交付能力。
 
 ## 教育
 
@@ -29,6 +29,16 @@ python -m http.server 8765
 http://127.0.0.1:8765/
 ```
 
+生成两份定向 PDF 简历：
+
+```powershell
+python make_chinese_resume_pdf.py --variant product
+python make_chinese_resume_pdf.py --variant engineer
+```
+
+- 产品与解决方案版：`assets/resume.pdf`
+- Agent 工程版：`assets/resume-agent-engineer.pdf`
+
 ## GitHub Pages 发布
 
 目标仓库：`https://github.com/dafu110/agent-portfolio`
@@ -43,7 +53,7 @@ https://dafu110.github.io/agent-portfolio/
 
 ## 页面结构
 
-- 首屏：两行价值主张、职业定位与直接行动入口
+- 首屏：统一呈现 Agent 产品与应用工程定位、三项核心证据和双版本 PDF 入口
 - 旗舰案例：使用全幅产品界面和简短案例说明建立第一视觉焦点
 - 项目：首页以角色、关键决策与结果摘要展示 4 个专项案例，服务招聘方快速扫描
 - 证据页：`cases/index.html`，集中展示技术边界、完整验证口径、失败案例、GitHub 与复现入口
@@ -51,7 +61,7 @@ https://dafu110.github.io/agent-portfolio/
 - 项目证据：四个项目均公开当前仓库实现周期与个人关键决策；PeopleOps 另提供带日期、配置模型、样本量、失败案例和复现命令的机器可读评测记录
 - 方法：按问题定义、系统设计、风险控制、验证交付四个阶段呈现
 - 背景：建筑设计经验迁移价值与教育信息介绍
-- 联系：公开邮箱、GitHub 和简历入口
+- 联系：公开邮箱、GitHub、产品版与 Agent 工程版简历入口
 
 ## 视觉策略
 
@@ -59,7 +69,7 @@ https://dafu110.github.io/agent-portfolio/
 - Codex 式浅色工作区：暖灰画布、黑色证据带、开放式项目档案与低对比细线；通过大尺度留白、强标题和连续索引建立层级
 - 首屏不堆放指标，产品界面本身承担主视觉
 - 只在头像、产品界面和评测记录等真实内容容器上使用圆角；项目与能力采用开放式分区，避免卡片墙
-- 头像只在 About 章节作为身份签名，建筑经历作为能力迁移呈现
+- 头像作为身份签名，传统项目经历仅作为复杂协同与结果交付的迁移证据
 
 ## 设计系统
 

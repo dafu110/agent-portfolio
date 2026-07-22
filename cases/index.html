@@ -136,7 +136,7 @@
               <div><dt>当前边界</dt><dd>这是本地确定性 fixture 与安全回归，不代表真实用户效果、外部连接器可用性或生成模型线上质量</dd></div>
             </dl>
           </section>
-          <div class="case-decision"><span>关键决策</span><p>候选人分析只输出带来源证据，不给录用结论；外部动作从草稿开始，必须显式提交、审批后执行。</p></div>
+          <div class="case-decision"><span>个人贡献</span><p>独立完成需求拆解、产品与工作流设计、前后端原型、测试评测和演示交付；候选人分析只输出来源证据，外部动作经提交与审批后执行。</p></div>
           <div class="case-links">
             <a href="https://github.com/dafu110/peopleops-intelligence-agent" target="_blank" rel="noreferrer">GitHub 仓库</a>
             <a href="https://github.com/dafu110/peopleops-intelligence-agent/tree/main/backend/tests" target="_blank" rel="noreferrer">测试目录</a>
@@ -169,7 +169,7 @@
             <img class="case-shot" src="../assets/researchops-dashboard.png" width="1529" height="857" loading="lazy" decoding="async" alt="ResearchOps dashboard，展示任务规划、工具调用、审批与运行时间线" />
             <figcaption><span>界面证据 02</span><strong>每一步规划、工具调用、审批和重试都保留可观察状态</strong></figcaption>
           </figure>
-          <div class="case-decision"><span>关键决策</span><p>Planner 与工具执行层双重检查审批策略；批准后在同一 <code>run_id</code> 恢复，避免重新提问造成上下文漂移。</p></div>
+          <div class="case-decision"><span>个人贡献</span><p>独立完成 Planner、任务队列、工具执行、审批恢复、运行时间线与离线评测；批准后沿同一 <code>run_id</code> 恢复。</p></div>
           <div class="case-links">
             <a href="https://github.com/dafu110/researchops-agent" target="_blank" rel="noreferrer">GitHub 仓库</a>
             <a href="https://github.com/dafu110/researchops-agent/tree/main/tests" target="_blank" rel="noreferrer">测试目录</a>
@@ -202,7 +202,7 @@
             <img class="case-shot" src="../assets/knowflow-dashboard.png" width="3072" height="1582" loading="lazy" decoding="async" alt="KnowFlow RAG dashboard，展示带引用回答、权限过滤与检索评测" />
             <figcaption><span>界面证据 03</span><strong>可信回答不仅显示结论，也显示引用、权限与拒答边界</strong></figcaption>
           </figure>
-          <div class="case-decision"><span>关键决策</span><p>权限过滤先于相关性排序，未授权内容不进入分数、调试轨迹、引用或最终上下文。</p></div>
+          <div class="case-decision"><span>个人贡献</span><p>独立完成语料处理、检索链路、ACL 过滤、引用与拒答策略及评测门禁；权限过滤先于相关性排序。</p></div>
           <div class="case-links">
             <a href="https://github.com/dafu110/knowflow-rag-agent" target="_blank" rel="noreferrer">GitHub 仓库</a>
             <a href="https://github.com/dafu110/knowflow-rag-agent/blob/main/evals/rag_eval_set.jsonl" target="_blank" rel="noreferrer">评测集</a>
@@ -235,7 +235,7 @@
             <img class="case-shot" src="../assets/data-analyst-workbench.png" width="3072" height="1582" loading="lazy" decoding="async" alt="Data Analyst 工作台，展示字段理解、质量检查、受控分析与报告输出" />
             <figcaption><span>界面证据 04</span><strong>从字段理解到隔离执行和报告输出，过程状态持续可检查</strong></figcaption>
           </figure>
-          <div class="case-decision"><span>关键决策</span><p>执行前由用户审批签名计划；生产 Python 只在无网络、只读、降权的 Docker worker 中运行，API 不持有 Docker socket。</p></div>
+          <div class="case-decision"><span>个人贡献</span><p>独立完成字段理解、质量检查、计划审批、SQL / Python 受控执行与报告导出；Python 在无网络、只读、降权的 Docker worker 中运行。</p></div>
           <div class="case-links">
             <a href="https://github.com/dafu110/data-analyst-agent" target="_blank" rel="noreferrer">GitHub 仓库</a>
             <a href="https://github.com/dafu110/data-analyst-agent/tree/main/tests" target="_blank" rel="noreferrer">测试目录</a>

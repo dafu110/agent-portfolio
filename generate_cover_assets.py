@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 OUT = Path(__file__).parent / "assets"
@@ -232,6 +232,72 @@ def make_data():
     img.save(OUT / "data-analyst-cover.png", quality=95)
 
 
+def make_social_preview():
+    width, height = 1200, 630
+    img = Image.new("RGB", (width, height), "#f4f4f1")
+    draw = ImageDraw.Draw(img)
+    ink = "#171717"
+    text_color = "#4b4b48"
+    muted = "#777773"
+    line_color = "#d7d7d2"
+    accent = "#4f46e5"
+
+    brand_font = font(18, True)
+    meta_font = font(13, False)
+    name_font = font(66, True)
+    role_font = font(24, True)
+    headline_font = font(38, True)
+    body_font = font(18, False)
+    proof_font = font(20, True)
+    proof_label_font = font(13, False)
+
+    text(draw, (42, 23), "傅孟涵", ink, brand_font)
+    text(draw, (112, 28), "AI Agent Resume Portfolio", muted, meta_font)
+    text(draw, (1150, 28), "PRODUCT + ENGINEERING", muted, meta_font, "ra")
+    line(draw, [(0, 64), (1200, 64)], line_color, 1)
+
+    text(draw, (52, 112), "AI PRODUCT / AGENT ENGINEERING / ENTERPRISE RAG", muted, meta_font)
+    text(draw, (48, 142), "傅孟涵", ink, name_font)
+    text(draw, (52, 224), "AI Agent 产品 / 应用工程", ink, role_font)
+    text(draw, (52, 294), "把复杂业务规则，设计成可执行、", ink, headline_font)
+    text(draw, (52, 344), "可审批、可验证的企业 AI Agent。", ink, headline_font)
+    text(draw, (52, 420), "独立完成 4 个 Agent 工作流原型，覆盖 RAG、工具调用、", text_color, body_font)
+    text(draw, (52, 450), "人工审批、评测与审计，并形成可复核的代码与测试证据。", text_color, body_font)
+
+    proof_items = [
+        ("10 年", "复杂项目交付"),
+        ("4 个", "独立 Agent 原型"),
+        ("47 / 47", "测试 · 25 / 25 离线案例"),
+    ]
+    proof_x = [52, 236, 414]
+    proof_w = [150, 150, 290]
+    for idx, (value, label) in enumerate(proof_items):
+        x = proof_x[idx]
+        if idx:
+            line(draw, [(x - 18, 520), (x - 18, 592)], line_color, 1)
+        text(draw, (x, 526), value, ink, proof_font)
+        text(draw, (x, 562), label, muted, proof_label_font)
+
+    card = (816, 104, 1148, 548)
+    rr(draw, card, 8, "#ffffff", line_color, 1)
+    portrait_path = OUT / "profile-portrait.png"
+    portrait = Image.open(portrait_path).convert("RGB")
+    portrait = ImageOps.fit(portrait, (132, 165), method=Image.Resampling.LANCZOS, centering=(0.5, 0.16))
+    img.paste(portrait, (840, 128))
+    text(draw, (998, 144), "个人项目", accent, meta_font)
+    text(draw, (998, 177), "需求拆解", ink, role_font)
+    text(draw, (998, 211), "原型开发", ink, role_font)
+    text(draw, (998, 245), "测试评测", ink, role_font)
+    line(draw, [(840, 318), (1124, 318)], line_color, 1)
+    text(draw, (840, 344), "旗舰案例", muted, meta_font)
+    text(draw, (840, 374), "PeopleOps 智能工作台", ink, role_font)
+    text(draw, (840, 416), "RAG · Tool Calling · Approval", text_color, meta_font)
+    text(draw, (840, 444), "权限 · 审计 · 离线评测", text_color, meta_font)
+    text(draw, (840, 500), "90 秒真实演示", accent, proof_font)
+
+    img.save(OUT / "portfolio-social-preview.png", quality=95)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     make_hero()
@@ -239,6 +305,7 @@ def main():
     make_researchops()
     make_knowflow()
     make_data()
+    make_social_preview()
 
 
 if __name__ == "__main__":

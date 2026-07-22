@@ -65,7 +65,8 @@ class SiteAuditTests(unittest.TestCase):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         visible_text = re.sub(r"<[^>]+>", "", homepage)
         self.assertEqual(len(re.findall(r'class="[^"]*\bsignature-line\b[^"]*"', homepage)), 1)
-        self.assertIn("企业 Agent 与 RAG，设计可控工作流与可复核交付。", visible_text)
+        self.assertIn("把复杂业务规则，设计成可执行、可审批、可验证的企业 AI Agent。", visible_text)
+        self.assertIn("AI Agent 产品 / 应用工程", visible_text)
         self.assertIn('href="home.css"', homepage)
         self.assertTrue((ROOT / "home.css").is_file())
         self.assertIn("scroll-margin-top: 64px", (ROOT / "base.css").read_text(encoding="utf-8"))
@@ -93,7 +94,7 @@ class SiteAuditTests(unittest.TestCase):
         career_heading = re.search(r'<h2 id="experience-title">(.*?)</h2>', homepage, re.DOTALL)
         self.assertIsNotNone(career_heading)
         lines = re.findall(r"<span>(.*?)</span>", career_heading.group(1))
-        self.assertEqual(lines, ["复杂协同经验", "沉淀为交付能力"])
+        self.assertEqual(lines, ["复杂协同经验", "沉淀交付能力"])
         self.assertIn("建筑项目经历", homepage)
 
     def test_homepage_uses_verified_career_timeline_without_old_personal_fields(self):
@@ -149,8 +150,8 @@ class SiteAuditTests(unittest.TestCase):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         stylesheet = (ROOT / "home.css").read_text(encoding="utf-8")
         for text in (
-            "一个旗舰案例讲清产品判断，三个轻量项目补充能力边界；复现与评测统一进入证据室。",
-            "从四个原型抽象出产品定义、可信知识、工具治理和交付表达；建筑经历作为复杂协同的迁移证据。",
+            "一个旗舰案例讲清业务判断、工程实现与验证闭环，三个项目补充 Agent 工作流、RAG 与受控执行能力。",
+            "从四个原型抽象出产品定义、可信知识、工作流工程和可验证交付；传统经历作为复杂协同的迁移证据。",
             "把模糊需求、多方协同与复杂约束，转为边界清晰、可测试、可追溯的企业 AI 工作流。",
         ):
             self.assertIn(text, homepage)
@@ -180,6 +181,13 @@ class SiteAuditTests(unittest.TestCase):
         self.assertNotIn("mailto:", background_actions.group(1))
         self.assertIn("data-contact-dialog", homepage)
         self.assertIn("data-copy-email", homepage)
+
+    def test_resume_ctas_lead_to_the_two_explicit_versions(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(homepage.count('href="#resume-versions"'), 2)
+        self.assertIn('id="resume-versions"', homepage)
+        self.assertEqual(homepage.count('href="assets/resume.pdf"'), 1)
+        self.assertEqual(homepage.count('href="assets/resume-agent-engineer.pdf"'), 2)
 
     def test_local_links_and_fragments_exist(self):
         for path in HTML_FILES:
@@ -257,6 +265,7 @@ class SiteAuditTests(unittest.TestCase):
         responsive = (ROOT / "responsive.css").read_text(encoding="utf-8")
 
         self.assertIn("\u7ed3\u679c\u53ef\u590d\u6838", homepage)
+        self.assertIn("查看项目与代码", homepage)
         self.assertNotIn("fixture", homepage)
         self.assertNotIn("\u9ec4\u91d1\u8f68\u8ff9", homepage)
         self.assertIn('class="background-actions"', homepage)
@@ -266,6 +275,17 @@ class SiteAuditTests(unittest.TestCase):
         )
         self.assertIn('content: " \u2192";', components)
         self.assertIn('content: " \u2212";', components)
+
+    def test_long_headings_use_controlled_responsive_wrapping(self):
+        homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+        home_css = (ROOT / "home.css").read_text(encoding="utf-8")
+        responsive = (ROOT / "responsive.css").read_text(encoding="utf-8")
+        hero_focus = re.search(r'<p class="hero-focus">(.*?)</p>', homepage, re.DOTALL)
+        self.assertIsNotNone(hero_focus)
+        self.assertEqual(hero_focus.group(1).count("<span>"), 2)
+        self.assertIn(".hero-focus span", home_css)
+        self.assertRegex(responsive, r"\.cta-card h2\s*\{[^}]*white-space:\s*normal")
+        self.assertNotRegex(responsive, r"\.cta-card h2\s*\{[^}]*white-space:\s*nowrap")
 
     def test_peopleops_demo_video_is_embedded_accessibly(self):
         for path in HTML_FILES:
@@ -302,10 +322,10 @@ class SiteAuditTests(unittest.TestCase):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
         evidence_room = (ROOT / "cases" / "index.html").read_text(encoding="utf-8")
         self.assertEqual(homepage.count('class="project-period"'), 4)
-        self.assertEqual(homepage.count("<dt>产品判断</dt>"), 1)
+        self.assertEqual(homepage.count("<dt>个人贡献</dt>"), 1)
         self.assertEqual(homepage.count("<dt>关键决策</dt>"), 3)
         self.assertEqual(evidence_room.count('class="project-period"'), 4)
-        self.assertEqual(evidence_room.count('<span>关键决策</span>'), 4)
+        self.assertEqual(evidence_room.count('<span>个人贡献</span>'), 4)
 
     def test_homepage_puts_ai_evidence_before_architecture_experience(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -313,10 +333,7 @@ class SiteAuditTests(unittest.TestCase):
         self.assertLess(homepage.index('id="capability"'), homepage.index('id="experience"'))
         self.assertLess(homepage.index('href="#work"'), homepage.index('href="#capability"'))
         self.assertLess(homepage.index('href="#capability"'), homepage.index('href="#experience"'))
-        self.assertIn(
-            "聚焦企业 AI 应用产品与解决方案，已独立完成 4 个可验证工作流原型",
-            homepage,
-        )
+        self.assertIn("独立完成 4 个 Agent 工作流原型", homepage)
 
     def test_peopleops_homepage_proof_is_compact_without_metric_repetition(self):
         homepage = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -324,9 +341,9 @@ class SiteAuditTests(unittest.TestCase):
             r'<article id="project-peopleops".*?</article>', homepage, re.DOTALL
         ).group(0)
         self.assertIn('class="flagship-evidence"', flagship)
-        self.assertEqual(homepage.count("47 / 47"), 1)
-        self.assertEqual(homepage.count("25 / 25"), 1)
-        for label in ("产品问题", "产品判断", "业务价值"):
+        self.assertEqual(homepage.count("47 / 47"), 2)
+        self.assertEqual(homepage.count("25 / 25"), 2)
+        for label in ("业务问题", "个人贡献", "关键实现"):
             self.assertIn(f"<dt>{label}</dt>", flagship)
         self.assertNotIn("<dt>验证结果</dt>", flagship)
 
@@ -340,9 +357,9 @@ class SiteAuditTests(unittest.TestCase):
             self.assertEqual(compact.count("<div>"), 2)
         for facts in fact_groups:
             self.assertEqual(facts.count("<div>"), 3)
-            self.assertIn("产品问题", facts)
-            self.assertIn("产品判断", facts)
-            self.assertIn("业务价值", facts)
+            self.assertIn("业务问题", facts)
+            self.assertIn("个人贡献", facts)
+            self.assertIn("关键实现", facts)
         self.assertNotIn("<dt>技术/系统边界</dt>", homepage)
         self.assertNotIn("<dt>GitHub README</dt>", homepage)
         evidence_room = (ROOT / "cases" / "index.html").read_text(encoding="utf-8")

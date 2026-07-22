@@ -14,18 +14,25 @@ PYTHON = Path(
 GENERATOR = ROOT / "make_chinese_resume_pdf.py"
 FINAL_PDF = ROOT / "output" / "pdf" / "fu-menghan-ai-agent-resume-one-page.pdf"
 WEB_PDF = ROOT / "assets" / "resume.pdf"
+ENGINEER_PDF = ROOT / "output" / "pdf" / "fu-menghan-ai-agent-engineer-resume-one-page.pdf"
+WEB_ENGINEER_PDF = ROOT / "assets" / "resume-agent-engineer.pdf"
 
 
 class ResumePdfTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        subprocess.run([str(PYTHON), str(GENERATOR)], cwd=ROOT, check=True)
+        subprocess.run([str(PYTHON), str(GENERATOR), "--variant", "product"], cwd=ROOT, check=True)
+        subprocess.run([str(PYTHON), str(GENERATOR), "--variant", "engineer"], cwd=ROOT, check=True)
         cls.reader = PdfReader(str(FINAL_PDF))
         cls.text = "\n".join(page.extract_text() or "" for page in cls.reader.pages)
+        cls.engineer_reader = PdfReader(str(ENGINEER_PDF))
+        cls.engineer_text = "\n".join(page.extract_text() or "" for page in cls.engineer_reader.pages)
 
     def test_resume_is_one_page_and_synced_with_website(self):
         self.assertEqual(len(self.reader.pages), 1)
         self.assertEqual(FINAL_PDF.read_bytes(), WEB_PDF.read_bytes())
+        self.assertEqual(len(self.engineer_reader.pages), 1)
+        self.assertEqual(ENGINEER_PDF.read_bytes(), WEB_ENGINEER_PDF.read_bytes())
 
     def test_resume_uses_recruiter_reading_order(self):
         headings = ["个人简介", "AI 项目经历", "工作经历", "专业能力", "教育背景"]
@@ -47,12 +54,12 @@ class ResumePdfTests(unittest.TestCase):
             self.assertIn(employer, compact_work)
         self.assertIn("2023 - 至今", work)
         self.assertIn("2015 - 2017", work)
-        self.assertIn("2017 - 2019、2021 - 2023", work)
+        self.assertIn("2017 - 2023", work)
 
     def test_resume_leads_with_ai_evidence_and_dates_each_project(self):
         compact_text = re.sub(r"\s+", "", self.text)
         self.assertIn(
-            "聚焦企业AI应用产品与解决方案，已独立完成4个可验证工作流原型",
+            "聚焦企业AIAgent产品与解决方案，已独立完成4个可验证工作流原型",
             compact_text,
         )
         self.assertNotIn("现转向", self.text)
@@ -79,16 +86,16 @@ class ResumePdfTests(unittest.TestCase):
     def test_resume_includes_second_public_representative_scheme(self):
         compact_text = re.sub(r"\s+", "", self.text)
         for evidence in (
-            "乐清市盐盆山清和公园一体化建设工程-山顶建筑设计方案",
+            "乐清盐盆山山顶建筑方案",
             "3657㎡",
             "方案设计一等奖",
             "大跨度木结构",
         ):
             self.assertIn(evidence, compact_text)
         self.assertNotIn("大赋建筑", compact_text)
-        self.assertEqual(compact_text.count("代表方案"), 2)
-        self.assertIn("代表方案01齐河县国家现代农业产业园综合服务中心", compact_text)
-        self.assertIn("代表方案02乐清市盐盆山清和公园一体化建设工程-山顶建筑设计方案", compact_text)
+        self.assertEqual(compact_text.count("代表交付"), 1)
+        self.assertIn("代表交付齐河县国家现代农业产业园综合服务中心", compact_text)
+        self.assertIn("乐清盐盆山山顶建筑方案", compact_text)
         self.assertNotIn("公开项目", compact_text)
         self.assertNotIn("独立设计", compact_text)
         self.assertNotIn("主创", compact_text)
@@ -121,7 +128,14 @@ class ResumePdfTests(unittest.TestCase):
 
     def test_resume_lists_ai_coding_tools(self):
         self.assertIn("Cursor", self.text)
-        self.assertIn("OpenAI Codex", self.text)
+        self.assertIn("Codex", self.text)
+
+    def test_engineering_resume_leads_with_implementation_evidence(self):
+        compact_text = re.sub(r"\s+", "", self.engineer_text)
+        self.assertIn("AIAgent开发工程师/AI应用工程师", compact_text)
+        self.assertIn("Python、FastAPI、LangGraph与React", compact_text)
+        self.assertIn("独立完成工作流、前后端原型、测试评测", compact_text)
+        self.assertIn("Cursor/Codex辅助开发、调试、测试与文档", compact_text)
 
     def test_public_links_are_clickable(self):
         annotations = self.reader.pages[0].get("/Annots") or []
@@ -134,8 +148,10 @@ class ResumePdfTests(unittest.TestCase):
             "mailto:poeticarch@163.com",
             "https://github.com/dafu110",
             "https://dafu110.github.io/agent-portfolio/",
+            "https://github.com/dafu110/peopleops-intelligence-agent",
         ):
             self.assertIn(expected, uris)
+        self.assertNotIn("https://github.com/dafu110/peopleops-agent", uris)
         self.assertIn("https://dafu110.github.io/agent-portfolio/", self.text)
 
     def test_resume_copy_avoids_internal_evaluation_jargon(self):

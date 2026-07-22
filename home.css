@@ -53,6 +53,10 @@
   line-height: 1.35;
 }
 
+.hero-focus span {
+  display: block;
+}
+
 .hero-statement {
   max-width: 760px;
   margin-top: 12px;
@@ -140,7 +144,7 @@
 
 .portrait-panel p {
   display: grid;
-  align-content: end;
+  align-content: center;
   gap: 8px;
   padding: 18px;
   border-top: 0;
@@ -161,6 +165,7 @@
   max-width: none;
   font-size: 13px;
   text-align: left;
+  text-wrap: balance;
 }
 
 .evidence-panel {
@@ -172,6 +177,38 @@
 
 .evidence-panel dl {
   gap: 0;
+}
+
+.resume-versions {
+  display: grid;
+  margin: 4px 0 10px;
+  border-block: 1px solid var(--line);
+}
+
+.resume-versions a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 40px;
+  color: var(--text);
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.resume-versions a + a {
+  border-top: 1px solid var(--line);
+}
+
+.resume-versions strong {
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.resume-versions a:hover span,
+.resume-versions a:focus-visible span {
+  color: var(--ink);
 }
 
 .evidence-panel dl div {
@@ -318,6 +355,7 @@
   color: var(--ink);
   font-size: 14px;
   line-height: 1.45;
+  text-wrap: balance;
 }
 
 .career-scheme div span {
@@ -757,6 +795,7 @@
 
 .capability-grid h3 {
   font-size: 18px;
+  text-wrap: balance;
 }
 
 .capability-grid p {
@@ -772,8 +811,7 @@
 }
 
 .background-section h2 {
-  font-size: clamp(2.4rem, 3.4vw, 3.35rem);
-  white-space: nowrap;
+  font-size: clamp(2.25rem, 3vw, 3rem);
 }
 
 @media (min-width: 981px) and (max-width: 1199px) {
