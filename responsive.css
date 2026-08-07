@@ -85,6 +85,19 @@
     min-height: auto;
   }
 
+  .case-hero-copy {
+    grid-template-columns: 1fr;
+    max-width: none;
+    justify-self: stretch;
+  }
+
+  .case-hero-copy p:last-child {
+    padding-top: 14px;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
   .profile-stack {
     max-width: 360px;
   }
@@ -723,7 +736,15 @@
 
   .case-hero h1 {
     width: 100%;
-    font-size: clamp(2.1rem, 10vw, 2.6rem);
+    max-width: 100%;
+    font-size: clamp(2rem, 8vw, 2.35rem);
+    line-height: 1.04;
+  }
+
+  .case-hero .display-lines > span {
+    width: auto;
+    white-space: normal;
+    text-wrap: balance;
   }
 
   .case-file-head h2 {
@@ -749,18 +770,21 @@
   }
 
   .evidence-index {
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
+    overflow-x: clip;
   }
 
   .evidence-index .container {
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-content: center;
+    padding-block: 8px;
     padding-inline: 16px;
   }
 
   .evidence-index > .container > span {
-    margin-right: 8px;
+    flex-basis: 100%;
+    margin-right: 0;
   }
 
   .background-copy {

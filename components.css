@@ -620,19 +620,19 @@
 
 .case-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.68fr) minmax(300px, 0.32fr);
-  gap: clamp(40px, 5vw, 64px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 30px;
   align-items: end;
-  min-height: 58svh;
-  padding-block: 88px 56px;
+  min-height: auto;
+  padding-block: 96px 56px;
   border-bottom: 1px solid var(--line-dark);
 }
 
 .case-hero h1 {
-  width: min(100%, 11.5ch);
-  max-width: 11.5ch;
+  width: min(100%, 850px);
+  max-width: 850px;
   margin-top: 14px;
-  font-size: clamp(3rem, 4.35vw, 4.1rem);
+  font-size: clamp(2.9rem, 4.25vw, 4rem);
   font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1.02;
@@ -641,14 +641,17 @@
 
 .case-hero-copy {
   display: grid;
-  gap: 14px;
-  max-width: 330px;
-  justify-self: end;
+  grid-template-columns: minmax(0, 0.58fr) minmax(260px, 0.42fr);
+  gap: 28px;
+  max-width: 900px;
+  justify-self: start;
 }
 
 .case-hero-copy p:last-child {
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
+  padding-top: 0;
+  padding-left: 24px;
+  border-top: 0;
+  border-left: 1px solid var(--line);
   font-size: 13px;
 }
 
