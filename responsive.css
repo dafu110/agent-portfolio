@@ -532,12 +532,30 @@
   }
 
   .evidence-panel dl div {
-    grid-template-columns: 34px minmax(0, 1fr);
-    padding-block: 9px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+    padding-block: 12px;
+  }
+
+  .evidence-panel dt,
+  .evidence-panel dd {
+    min-width: 0;
+  }
+
+  .evidence-panel dt {
+    line-height: 1.2;
   }
 
   .evidence-panel dd strong {
+    display: block;
     font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+
+  .evidence-panel dd span {
+    display: block;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
   }
 
   .evidence-panel dd span,
