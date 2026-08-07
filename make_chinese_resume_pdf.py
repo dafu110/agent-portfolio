@@ -65,7 +65,7 @@ def project_line(name, period, value, evidence, link):
             p(value, body),
             p(f"{evidence}<br/>{link_text}", small),
         ]],
-        colWidths=[45 * mm, 68 * mm, CONTENT_W - 113 * mm],
+        colWidths=[31 * mm, 80 * mm, CONTENT_W - 111 * mm],
     )
     row.setStyle(table_style(
         ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
