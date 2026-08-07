@@ -620,8 +620,8 @@
 
 .case-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.45fr);
-  gap: 88px;
+  grid-template-columns: minmax(0, 0.68fr) minmax(300px, 0.32fr);
+  gap: clamp(40px, 5vw, 64px);
   align-items: end;
   min-height: 58svh;
   padding-block: 88px 56px;
@@ -629,18 +629,21 @@
 }
 
 .case-hero h1 {
-  width: min(100%, 560px);
-  max-width: 560px;
+  width: min(100%, 11.5ch);
+  max-width: 11.5ch;
   margin-top: 14px;
-  font-size: clamp(3rem, 5vw, 4.75rem);
+  font-size: clamp(3rem, 4.35vw, 4.1rem);
   font-weight: 700;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.035em;
   line-height: 1.02;
+  text-wrap: balance;
 }
 
 .case-hero-copy {
   display: grid;
   gap: 14px;
+  max-width: 330px;
+  justify-self: end;
 }
 
 .case-hero-copy p:last-child {

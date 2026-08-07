@@ -117,7 +117,7 @@ header_copy = [
         contact_style,
     ),
 ]
-portrait = Image(str(ASSETS / "profile-portrait.jpg"), width=30 * mm, height=37.5 * mm)
+portrait = Image(str(ASSETS / "profile-portrait.png"), width=30 * mm, height=37.5 * mm)
 portrait.hAlign = "CENTER"
 portrait_card = Table([[portrait]], colWidths=[36 * mm], rowHeights=[43 * mm])
 portrait_card.setStyle(table_style(
