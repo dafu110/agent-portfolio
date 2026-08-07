@@ -29,6 +29,7 @@ jobs:
           mkdir _site
           cp index.html base.css components.css home.css responsive.css site.js robots.txt sitemap.xml .nojekyll _site/
           cp -r assets cases evidence _site/
+          cp -r "AI Practice Consultant" _site/
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
