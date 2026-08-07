@@ -1,8 +1,8 @@
 /* Homepage: quiet portfolio hierarchy inspired by light product interfaces. */
 
 .resume-hero {
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 320px);
-  gap: clamp(56px, 8vw, 112px);
+  grid-template-columns: minmax(0, 1fr) minmax(350px, 380px);
+  gap: clamp(48px, 6vw, 88px);
   min-height: auto;
   padding-block: clamp(56px, 6vw, 80px) clamp(64px, 7vw, 88px);
 }
@@ -87,6 +87,18 @@
   border-left: 1px solid var(--line);
 }
 
+.hero-proof div:nth-child(1) {
+  border-top: 2px solid #3b6fd8;
+}
+
+.hero-proof div:nth-child(2) {
+  border-top: 2px solid #14a38b;
+}
+
+.hero-proof div:nth-child(3) {
+  border-top: 2px solid #e6a400;
+}
+
 .hero-proof strong,
 .hero-proof span {
   display: block;
@@ -129,8 +141,8 @@
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--paper);
-  box-shadow: none;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+  box-shadow: 0 18px 46px rgba(24, 24, 23, 0.055);
 }
 
 .portrait-panel img {
@@ -169,13 +181,15 @@
 }
 
 .evidence-panel {
-  padding: 8px 18px 12px;
+  padding: 12px 16px 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--paper);
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+  box-shadow: 0 18px 46px rgba(24, 24, 23, 0.055);
 }
 
 .evidence-panel dl {
+  display: grid;
   gap: 0;
 }
 
@@ -183,6 +197,7 @@
   display: grid;
   margin: 4px 0 10px;
   border-block: 1px solid var(--line);
+  background: linear-gradient(90deg, rgba(59, 111, 216, 0.06), rgba(20, 184, 166, 0.05));
 }
 
 .resume-versions a {
@@ -212,27 +227,55 @@
 }
 
 .evidence-panel dl div {
-  grid-template-columns: 46px minmax(0, 1fr);
-  padding-block: 10px;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  position: relative;
+  padding: 11px 0 11px 10px;
 }
 
 .evidence-panel dl div + div {
   border-top: 1px solid var(--line);
 }
 
+.evidence-panel dl div::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.evidence-panel dl div:nth-child(2)::before,
+.evidence-panel dl div:nth-child(5)::before {
+  background: #14a38b;
+}
+
+.evidence-panel dl div:nth-child(3)::before {
+  background: #e6a400;
+}
+
 .evidence-panel dt {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 10px;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .evidence-panel dd strong {
-  font-size: 12px;
+  font-size: 12.5px;
   line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .evidence-panel dd span {
   margin-top: 2px;
   font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .evidence-panel > .contact-link {
@@ -776,11 +819,11 @@
 .capability-section {
   margin-top: 0;
   border-block: 1px solid var(--line);
-  background: var(--paper);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
 }
 
 .capability-layout {
-  gap: clamp(48px, 7vw, 90px);
+  gap: clamp(36px, 5vw, 68px);
 }
 
 .capability-grid {
@@ -793,11 +836,13 @@
 .capability-grid section {
   grid-template-columns: 34px minmax(0, 1fr);
   gap: 8px 12px;
-  min-height: 158px;
+  min-height: 152px;
   padding: 22px;
   border: 1px solid var(--line);
+  border-top-width: 3px;
   border-radius: 12px;
-  background: var(--paper);
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+  box-shadow: 0 16px 38px rgba(24, 24, 23, 0.045);
 }
 
 .capability-grid section + section {
@@ -809,7 +854,7 @@
   width: 26px;
   height: 26px;
   border-radius: 8px;
-  background: var(--paper);
+  background: var(--accent-soft);
   color: var(--accent);
   line-height: 26px;
   text-align: center;
@@ -960,4 +1005,24 @@
   .supporting-project {
     transition: none;
   }
+}
+
+.capability-grid section:nth-child(1) {
+  border-top-color: #3b6fd8;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f7ff 100%);
+}
+
+.capability-grid section:nth-child(2) {
+  border-top-color: #14a38b;
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbf9 100%);
+}
+
+.capability-grid section:nth-child(3) {
+  border-top-color: #e6a400;
+  background: linear-gradient(180deg, #ffffff 0%, #fff9e8 100%);
+}
+
+.capability-grid section:nth-child(4) {
+  border-top-color: #7c5cff;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f5ff 100%);
 }

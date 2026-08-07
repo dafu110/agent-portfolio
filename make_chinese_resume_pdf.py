@@ -5,7 +5,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
-from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from reportlab.platypus import HRFlowable, Image, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 
 ROOT = Path(__file__).resolve().parent
@@ -117,8 +117,23 @@ header_copy = [
         contact_style,
     ),
 ]
-header = Table([[header_copy]], colWidths=[CONTENT_W])
-header.setStyle(table_style(("BOTTOMPADDING", (0, 0), (-1, -1), 2)))
+portrait = Image(str(ASSETS / "profile-portrait.jpg"), width=30 * mm, height=37.5 * mm)
+portrait.hAlign = "CENTER"
+portrait_card = Table([[portrait]], colWidths=[36 * mm], rowHeights=[43 * mm])
+portrait_card.setStyle(table_style(
+    ("BACKGROUND", (0, 0), (-1, -1), SOFT),
+    ("BOX", (0, 0), (-1, -1), 0.45, LINE),
+    ("LEFTPADDING", (0, 0), (-1, -1), 3),
+    ("RIGHTPADDING", (0, 0), (-1, -1), 3),
+    ("TOPPADDING", (0, 0), (-1, -1), 3),
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+))
+header = Table([[header_copy, portrait_card]], colWidths=[CONTENT_W - 40 * mm, 40 * mm])
+header.setStyle(table_style(
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+    ("RIGHTPADDING", (0, 0), (0, 0), 10),
+    ("LEFTPADDING", (1, 0), (1, 0), 8),
+))
 
 story = [header, HRFlowable(width="100%", thickness=0.7, color=LINE)]
 
