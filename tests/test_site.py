@@ -2,7 +2,7 @@ import re
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote
+from urllib.parse import unquote, urlsplit
 
 from PIL import Image
 
@@ -73,7 +73,7 @@ class SiteAuditTests(unittest.TestCase):
             self.assertIn(phrase, homepage)
         self.assertNotIn("AI Practice Consultant /", homepage)
         self.assertNotIn("resume-agent-engineer.pdf", homepage)
-        self.assertEqual(homepage.count('href="assets/resume.pdf"'), 2)
+        self.assertEqual(homepage.count('href="assets/resume.pdf?v=873c2ac"'), 2)
         self.assertEqual(homepage.count('class="supporting-project"'), 2)
         order = [
             homepage.index('id="project-ai-practice"'),
@@ -128,11 +128,11 @@ class SiteAuditTests(unittest.TestCase):
                 if value.startswith("#"):
                     self.assertIn(value[1:], parser.ids, f"{path}: missing local anchor {value}")
                     continue
-                relative, _, fragment = value.partition("#")
-                target = (path.parent / unquote(relative)).resolve()
+                parsed = urlsplit(value)
+                target = (path.parent / unquote(parsed.path)).resolve()
                 self.assertTrue(target.exists(), f"{path}: missing {attr} {value}")
-                if fragment and target.suffix == ".html":
-                    self.assertIn(fragment, parse(target).ids, f"{path}: missing #{fragment}")
+                if parsed.fragment and target.suffix == ".html":
+                    self.assertIn(parsed.fragment, parse(target).ids, f"{path}: missing #{parsed.fragment}")
 
     def test_declared_image_dimensions_match_files(self):
         for path in HTML_FILES:
