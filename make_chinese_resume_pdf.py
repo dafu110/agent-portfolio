@@ -118,17 +118,8 @@ header_copy = [
     ),
 ]
 portrait = Image(str(ASSETS / "profile-portrait.png"), width=30 * mm, height=37.5 * mm)
-portrait.hAlign = "CENTER"
-portrait_card = Table([[portrait]], colWidths=[36 * mm], rowHeights=[43 * mm])
-portrait_card.setStyle(table_style(
-    ("BACKGROUND", (0, 0), (-1, -1), SOFT),
-    ("BOX", (0, 0), (-1, -1), 0.45, LINE),
-    ("LEFTPADDING", (0, 0), (-1, -1), 3),
-    ("RIGHTPADDING", (0, 0), (-1, -1), 3),
-    ("TOPPADDING", (0, 0), (-1, -1), 3),
-    ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
-))
-header = Table([[header_copy, portrait_card]], colWidths=[CONTENT_W - 40 * mm, 40 * mm])
+portrait.hAlign = "RIGHT"
+header = Table([[header_copy, portrait]], colWidths=[CONTENT_W - 36 * mm, 36 * mm])
 header.setStyle(table_style(
     ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
     ("RIGHTPADDING", (0, 0), (0, 0), 10),
