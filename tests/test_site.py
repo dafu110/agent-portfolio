@@ -62,6 +62,7 @@ class SiteAuditTests(unittest.TestCase):
         homepage = read(ROOT / "index.html")
         for phrase in (
             "AI Practice Consultant",
+            "ArchMind Architecture AI Practice Workspace",
             "practical, people-facing AI adoption",
             "Opportunity Discovery",
             "Workflow Prototyping",
@@ -100,6 +101,7 @@ class SiteAuditTests(unittest.TestCase):
             self.assertIn(f'href="{fragment}"', cases)
         for label in ("User scenario", "Key decision", "Current evidence", "Project boundary"):
             self.assertIn(label, cases)
+        self.assertIn("ArchMind Architecture AI Practice Workspace", cases)
         self.assertIn('data-project="ai-practice-case"', cases)
         self.assertIn('data-project="buildloop-case"', cases)
         self.assertIn('data-project="peopleops"', cases)

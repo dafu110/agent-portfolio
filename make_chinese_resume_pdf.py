@@ -53,7 +53,7 @@ def table_style(*commands):
     ])
 
 
-def section(title, before=4 * mm, after=1.5 * mm):
+def section(title, before=3 * mm, after=1.0 * mm):
     return [Spacer(1, before), p(title, h2), Spacer(1, after)]
 
 
@@ -65,12 +65,12 @@ def project_line(name, period, value, evidence, link):
             p(value, body),
             p(f"{evidence}<br/>{link_text}", small),
         ]],
-        colWidths=[30 * mm, 75 * mm, CONTENT_W - 105 * mm],
+        colWidths=[45 * mm, 68 * mm, CONTENT_W - 113 * mm],
     )
     row.setStyle(table_style(
         ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
-        ("TOPPADDING", (0, 0), (-1, -1), 6.0),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 6.0),
+        ("TOPPADDING", (0, 0), (-1, -1), 4.2),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 4.2),
         ("RIGHTPADDING", (0, 0), (1, -1), 6),
     ))
     return row
@@ -128,13 +128,13 @@ header.setStyle(table_style(
 
 story = [header, HRFlowable(width="100%", thickness=0.7, color=LINE)]
 
-story.extend(section("Profile summary", before=3.6 * mm, after=1.2 * mm))
+story.extend(section("Profile summary", before=2.6 * mm, after=0.9 * mm))
 story.append(p(
     "AI Practice Consultant for practical, people-facing AI adoption. I connect 10 years of architecture and project delivery with hands-on AI prototyping: identifying useful opportunities across design, workplace strategy, engineering, delivery and operations; building lightweight workflows, prompts, prototypes and tools; explaining them clearly; and packaging reusable guidance for colleagues.",
     body,
 ))
 
-story.extend(section("Role-fit capabilities", before=4.4 * mm, after=1.4 * mm))
+story.extend(section("Role-fit capabilities", before=2.9 * mm, after=0.9 * mm))
 skills = Table(
     [[
         p("<b>Opportunity Discovery</b><br/>Use-case mapping, problem framing, pilot scope and non-goal definition.", skill_body),
@@ -154,9 +154,9 @@ skills.setStyle(table_style(
 ))
 story.append(skills)
 
-story.extend(section("AI project experience", before=4.4 * mm, after=1.4 * mm))
+story.extend(section("AI project experience", before=2.9 * mm, after=0.9 * mm))
 story.append(project_line(
-    "AI Practice Consultant",
+    "ArchMind Architecture AI Practice Workspace",
     "2026.08 / flagship",
     "Architecture AI pilot that turns SU screenshots, structured prompts, design review and team templates into a reusable AI practice workflow.",
     "4 SU-to-render cases; TaskSpec; workflow demo; toolkit for colleague adoption.",
@@ -177,7 +177,7 @@ story.append(project_line(
     f"{github_url}/peopleops-intelligence-agent",
 ))
 
-story.extend(section("Work experience", before=4.6 * mm, after=1.4 * mm))
+story.extend(section("Work experience", before=3.0 * mm, after=0.9 * mm))
 work = Table(
     [
         [p("2023 - present", work_meta), p("<b>North China Municipal Engineering Design & Research Institute</b><br/>Project lead", body), p("Public buildings and municipal supporting projects; requirement discovery, cross-discipline coordination and client reporting.", work_scope)],
@@ -188,8 +188,8 @@ work = Table(
 )
 work.setStyle(table_style(
     ("LINEBELOW", (0, 0), (-1, -2), 0.35, LINE),
-    ("TOPPADDING", (0, 0), (-1, -1), 3.0),
-    ("BOTTOMPADDING", (0, 0), (-1, -1), 3.0),
+    ("TOPPADDING", (0, 0), (-1, -1), 2.4),
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 2.4),
     ("RIGHTPADDING", (0, 0), (1, -1), 5),
 ))
 story.append(work)
@@ -203,15 +203,15 @@ representative = Table(
 )
 representative.setStyle(table_style(
     ("BACKGROUND", (0, 0), (-1, -1), SOFT),
-    ("TOPPADDING", (0, 0), (-1, -1), 5.6),
-    ("BOTTOMPADDING", (0, 0), (-1, -1), 5.6),
+    ("TOPPADDING", (0, 0), (-1, -1), 4.4),
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 4.4),
     ("LEFTPADDING", (0, 0), (-1, -1), 4.5),
     ("RIGHTPADDING", (0, 0), (-1, -1), 4.5),
 ))
-story.append(Spacer(1, 2.5 * mm))
+story.append(Spacer(1, 1.2 * mm))
 story.append(representative)
 
-story.extend(section("Education", before=4.4 * mm, after=1.2 * mm))
+story.extend(section("Education", before=2.8 * mm, after=0.9 * mm))
 education = Table(
     [[
         p("<b>Capital University of Economics and Business x aSSIST University</b><br/>M.S. in AI and Big Data Engineering / expected September 2027", body),
@@ -236,8 +236,8 @@ doc = SimpleDocTemplate(
     pagesize=A4,
     rightMargin=15 * mm,
     leftMargin=15 * mm,
-    topMargin=10 * mm,
-    bottomMargin=12 * mm,
+    topMargin=8 * mm,
+    bottomMargin=9 * mm,
     title=f"Fu Menghan - {ROLE_TITLE}",
     author="Fu Menghan",
     subject="One-page resume",

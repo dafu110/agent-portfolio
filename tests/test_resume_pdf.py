@@ -49,7 +49,7 @@ class ResumePdfTests(unittest.TestCase):
         self.assertNotIn("AIPracticeConsultant/", self.product_compact)
 
     def test_pdf_uses_current_three_project_story(self):
-        for current in ("AIPracticeConsultant", "BuildLoopAI", "PeopleOps"):
+        for current in ("ArchMindArchitectureAIPracticeWorkspace", "BuildLoopAI", "PeopleOps"):
             self.assertIn(current, self.product_compact)
         for metric in ("4", "283", "47/47", "25/25"):
             self.assertIn(metric, self.product_compact)
