@@ -25,9 +25,7 @@
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && isOpen()) {
-      close({ restoreFocus: true });
-    }
+    if (event.key === "Escape" && isOpen()) close({ restoreFocus: true });
   });
 
   document.addEventListener("pointerdown", (event) => {
@@ -36,10 +34,13 @@
 
   desktop.addEventListener("change", () => close());
 
-  const demoLink = document.querySelector('a[href="#peopleops-demo"]');
-  const demoDisclosure = document.querySelector("#peopleops-demo");
-  demoLink?.addEventListener("click", () => {
-    if (demoDisclosure instanceof HTMLDetailsElement) demoDisclosure.open = true;
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    const targetId = link.getAttribute("href")?.slice(1);
+    const disclosure = targetId ? document.getElementById(targetId) : null;
+    if (!(disclosure instanceof HTMLDetailsElement) || !disclosure.classList.contains("video-disclosure")) return;
+    link.addEventListener("click", () => {
+      disclosure.open = true;
+    });
   });
 
   document.querySelectorAll(".video-disclosure").forEach((disclosure) => {
@@ -53,13 +54,13 @@
     const button = frame.querySelector(".demo-video-toggle");
     if (!(video instanceof HTMLVideoElement) || !(button instanceof HTMLButtonElement)) return;
 
-    const label = video.getAttribute("aria-label") || "演示视频";
+    const label = video.getAttribute("aria-label") || "demo video";
     const buttonLabel = button.querySelector("span");
     const sync = () => {
       const playing = !video.paused && !video.ended;
       frame.dataset.state = playing ? "playing" : "paused";
-      button.setAttribute("aria-label", `${playing ? "暂停" : "播放"} ${label}`);
-      if (buttonLabel) buttonLabel.textContent = playing ? "暂停" : "播放";
+      button.setAttribute("aria-label", `${playing ? "Pause" : "Play"} ${label}`);
+      if (buttonLabel) buttonLabel.textContent = playing ? "Pause" : "Play";
     };
     const togglePlayback = () => {
       if (video.paused || video.ended) video.play().catch(sync);
@@ -86,7 +87,6 @@
       await navigator.clipboard.writeText(text);
       return;
     }
-
     const field = document.createElement("textarea");
     field.value = text;
     field.setAttribute("readonly", "");
@@ -129,9 +129,9 @@
 
     try {
       await copyToClipboard(email);
-      if (contactStatus) contactStatus.textContent = "邮箱已复制，可以直接粘贴发送。";
+      if (contactStatus) contactStatus.textContent = "Email copied. You can paste it now.";
     } catch (_error) {
-      if (contactStatus) contactStatus.textContent = `复制失败，请手动复制：${email}`;
+      if (contactStatus) contactStatus.textContent = `Copy failed. Please copy manually: ${email}`;
     }
   });
 

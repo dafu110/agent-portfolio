@@ -1,4 +1,3 @@
-import argparse
 from pathlib import Path
 import shutil
 
@@ -6,52 +5,15 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import (
-    HRFlowable,
-    Image,
-    KeepTogether,
-    Paragraph,
-    SimpleDocTemplate,
-    Spacer,
-    Table,
-    TableStyle,
-)
+from reportlab.platypus import HRFlowable, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 
 ROOT = Path(__file__).resolve().parent
 OUT_DIR = ROOT / "output" / "pdf"
 ASSETS = ROOT / "assets"
-
-parser = argparse.ArgumentParser(description="Generate a targeted one-page Chinese resume PDF.")
-parser.add_argument("--variant", choices=("product", "engineer"), default="product")
-args = parser.parse_args()
-IS_ENGINEER = args.variant == "engineer"
-
-if IS_ENGINEER:
-    FINAL_PDF = OUT_DIR / "fu-menghan-ai-agent-engineer-resume-one-page.pdf"
-    WEB_RESUME = ASSETS / "resume-agent-engineer.pdf"
-    ROLE_TITLE = "AI Agent 开发工程师 / AI 应用工程师"
-    SUMMARY = (
-        "聚焦企业 AI Agent 开发与应用工程，已独立完成 4 个可验证工作流原型，"
-        "覆盖 RAG、工具调用、人工审批、评测与审计；能够使用 Python、FastAPI、LangGraph 与 React "
-        "完成原型开发、调试和测试，并结合 10 年复杂项目经验推进需求与交付。"
-    )
-    FLAGSHIP_ROLE = "独立完成 · Agent 工作流 / 前后端 / 测试"
-else:
-    FINAL_PDF = OUT_DIR / "fu-menghan-ai-agent-resume-one-page.pdf"
-    WEB_RESUME = ASSETS / "resume.pdf"
-    ROLE_TITLE = "AI Agent 产品经理 / AI 解决方案顾问"
-    SUMMARY = (
-        "聚焦企业 AI Agent 产品与解决方案，已独立完成 4 个可验证工作流原型，"
-        "负责需求拆解、工作流设计、前后端原型与测试评测；叠加 10 年复杂项目协同与交付经验，"
-        "擅长把模糊需求转化为边界清晰、可验证的产品方案。"
-    )
-    FLAGSHIP_ROLE = "独立完成 · 产品设计 / 原型实现 / 评测"
-
-FONT_REGULAR = "ResumeRegular"
-FONT_BOLD = "ResumeBold"
+FINAL_PDF = OUT_DIR / "fu-menghan-ai-agent-resume-one-page.pdf"
+WEB_RESUME = ASSETS / "resume.pdf"
+ROLE_TITLE = "AI Practice Consultant"
 
 INK = colors.HexColor("#18181B")
 TEXT = colors.HexColor("#3F3F46")
@@ -59,36 +21,17 @@ MUTED = colors.HexColor("#71717A")
 ACCENT = colors.HexColor("#4F46E5")
 LINE = colors.HexColor("#D4D4D8")
 SOFT = colors.HexColor("#F5F5FA")
-WHITE = colors.white
 
-
-def first_existing(paths):
-    for path in paths:
-        if path.exists():
-            return path
-    raise FileNotFoundError("No usable Chinese font found.")
-
-
-def register_fonts():
-    fonts = Path("C:/Windows/Fonts")
-    regular = first_existing(
-        [fonts / "Deng.ttf", fonts / "msyh.ttc", fonts / "simfang.ttf", fonts / "simsun.ttc"]
-    )
-    bold = first_existing(
-        [fonts / "simhei.ttf", fonts / "msyhbd.ttc", fonts / "Dengb.ttf", fonts / "simsun.ttc"]
-    )
-    pdfmetrics.registerFont(TTFont(FONT_REGULAR, str(regular)))
-    pdfmetrics.registerFont(TTFont(FONT_BOLD, str(bold)))
+PAGE_W, _ = A4
+CONTENT_W = PAGE_W - 30 * mm
 
 
 def style(name, **kwargs):
     defaults = {
-        "fontName": FONT_REGULAR,
+        "fontName": "Helvetica",
         "fontSize": 9,
         "leading": 12,
         "textColor": TEXT,
-        "wordWrap": "CJK",
-        "splitLongWords": 1,
         "spaceAfter": 0,
     }
     defaults.update(kwargs)
@@ -100,90 +43,187 @@ def p(text, paragraph_style):
 
 
 def table_style(*commands):
-    return TableStyle(
-        [
-            ("VALIGN", (0, 0), (-1, -1), "TOP"),
-            ("LEFTPADDING", (0, 0), (-1, -1), 0),
-            ("RIGHTPADDING", (0, 0), (-1, -1), 0),
-            ("TOPPADDING", (0, 0), (-1, -1), 0),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
-            *commands,
-        ]
-    )
+    return TableStyle([
+        ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        ("LEFTPADDING", (0, 0), (-1, -1), 0),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+        ("TOPPADDING", (0, 0), (-1, -1), 0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 0),
+        *commands,
+    ])
 
 
-def section(title, before=3.3 * mm, after=1 * mm):
+def section(title, before=4 * mm, after=1.5 * mm):
     return [Spacer(1, before), p(title, h2), Spacer(1, after)]
 
 
-def bullet(text):
-    row = Table([[p("-", bullet_mark), p(text, body)]], colWidths=[4 * mm, CONTENT_W - 4 * mm])
-    row.setStyle(table_style(("RIGHTPADDING", (0, 0), (0, 0), 1.5)))
-    return row
-
-
 def project_line(name, period, value, evidence, link):
-    link_text = f'<link href="{link}" color="#4F46E5">查看仓库</link>'
+    link_text = f'<link href="{link}" color="#4F46E5">Repository</link>'
     row = Table(
         [[
             [p(f"<b>{name}</b>", body_bold), p(period, small)],
             p(value, body),
             p(f"{evidence}<br/>{link_text}", small),
         ]],
-        colWidths=[27 * mm, 75 * mm, CONTENT_W - 102 * mm],
+        colWidths=[30 * mm, 75 * mm, CONTENT_W - 105 * mm],
     )
-    row.setStyle(
-        table_style(
-            ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
-            ("TOPPADDING", (0, 0), (-1, -1), 7.9),
-            ("BOTTOMPADDING", (0, 0), (-1, -1), 7.9),
-            ("RIGHTPADDING", (0, 0), (0, -1), 5),
-            ("RIGHTPADDING", (1, 0), (1, -1), 7),
-        )
-    )
+    row.setStyle(table_style(
+        ("LINEBELOW", (0, 0), (-1, 0), 0.35, LINE),
+        ("TOPPADDING", (0, 0), (-1, -1), 6.0),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6.0),
+        ("RIGHTPADDING", (0, 0), (1, -1), 6),
+    ))
     return row
-
-
-def career_line(period, employer, role, scope):
-    return [
-        p(period, work_meta),
-        [p(f"<b>{employer}</b>", work_employer), p(role, work_meta)],
-        p(scope, work_scope),
-    ]
 
 
 def draw_footer(canvas, doc):
     canvas.saveState()
     canvas.setFillColor(MUTED)
-    canvas.setFont(FONT_REGULAR, 7.5)
-    canvas.drawString(15 * mm, 7.5 * mm, f"傅孟涵 · {ROLE_TITLE}")
-    canvas.drawRightString(195 * mm, 7.5 * mm, "一页简历 · 2026-07")
+    canvas.setFont("Helvetica", 7.5)
+    canvas.drawString(15 * mm, 7.5 * mm, f"Fu Menghan / {ROLE_TITLE}")
+    canvas.drawRightString(195 * mm, 7.5 * mm, "One-page resume / 2026")
     canvas.restoreState()
 
 
-register_fonts()
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 ASSETS.mkdir(parents=True, exist_ok=True)
 
-PAGE_W, _ = A4
-CONTENT_W = PAGE_W - 30 * mm
+name_style = style("Name", fontName="Helvetica-Bold", fontSize=22, leading=25, textColor=INK)
+role_style = style("Role", fontName="Helvetica-Bold", fontSize=11, leading=14, textColor=ACCENT)
+contact_style = style("Contact", fontSize=8.4, leading=10.0, textColor=MUTED)
+h2 = style("H2", fontName="Helvetica-Bold", fontSize=12, leading=14.5, textColor=ACCENT)
+h3 = style("H3", fontName="Helvetica-Bold", fontSize=10.4, leading=13.5, textColor=INK)
+body = style("Body", fontSize=9.2, leading=12.4, textColor=TEXT)
+body_bold = style("BodyBold", fontName="Helvetica-Bold", fontSize=9.2, leading=12.4, textColor=INK)
+small = style("Small", fontSize=8.1, leading=10.8, textColor=MUTED)
+skill_body = style("SkillBody", fontSize=8.2, leading=10.5, textColor=TEXT)
+work_meta = style("WorkMeta", fontSize=8.2, leading=10.6, textColor=MUTED)
+work_scope = style("WorkScope", fontSize=8.4, leading=11.2, textColor=MUTED)
 
-name_style = style("Name", fontName=FONT_BOLD, fontSize=22, leading=25, textColor=INK)
-role_style = style("Role", fontName=FONT_BOLD, fontSize=11, leading=14, textColor=ACCENT)
-contact_style = style("Contact", fontSize=8.8, leading=10.2, textColor=MUTED)
-h2 = style("H2", fontName=FONT_BOLD, fontSize=12.3, leading=15, textColor=ACCENT)
-h3 = style("H3", fontName=FONT_BOLD, fontSize=10.8, leading=14, textColor=INK)
-body = style("Body", fontSize=10, leading=14.5, textColor=TEXT)
-body_bold = style("BodyBold", fontName=FONT_BOLD, fontSize=10, leading=14.5, textColor=INK)
-small = style("Small", fontSize=9, leading=12.5, textColor=MUTED)
-skill_body = style("SkillBody", fontSize=8.7, leading=11.4, textColor=TEXT)
-bullet_mark = style("BulletMark", fontName=FONT_BOLD, fontSize=10, leading=14.5, textColor=ACCENT)
-flagship_body = style("FlagshipBody", fontSize=10, leading=14.7, textColor=TEXT, spaceAfter=1.3)
-work_employer = style("WorkEmployer", fontName=FONT_BOLD, fontSize=9.3, leading=11.5, textColor=INK)
-work_meta = style("WorkMeta", fontSize=8.6, leading=11.3, textColor=MUTED)
-work_scope = style("WorkScope", fontSize=8.8, leading=11.8, textColor=MUTED)
-scheme_label = style("SchemeLabel", fontSize=8.4, leading=11, textColor=MUTED)
-scheme_text = style("SchemeText", fontSize=8.7, leading=11.7, textColor=MUTED)
+portfolio_url = "https://dafu110.github.io/agent-portfolio/"
+github_url = "https://github.com/dafu110"
+email_url = "mailto:poeticarch@163.com"
+
+header_copy = [
+    p("Fu Menghan", name_style),
+    p(ROLE_TITLE, role_style),
+    Spacer(1, 1 * mm),
+    p(
+        "Beijing / available to work in Beijing / available now / on-site, hybrid or remote<br/>"
+        "Phone and WeChat: 15811203776 | "
+        f'<link href="{email_url}" color="#71717A">poeticarch@163.com</link> | '
+        f'<link href="{github_url}" color="#71717A">GitHub</link><br/>'
+        f'Portfolio: <link href="{portfolio_url}" color="#4F46E5">{portfolio_url}</link>',
+        contact_style,
+    ),
+]
+header = Table([[header_copy]], colWidths=[CONTENT_W])
+header.setStyle(table_style(("BOTTOMPADDING", (0, 0), (-1, -1), 2)))
+
+story = [header, HRFlowable(width="100%", thickness=0.7, color=LINE)]
+
+story.extend(section("Profile summary", before=3.6 * mm, after=1.2 * mm))
+story.append(p(
+    "AI Practice Consultant for practical, people-facing AI adoption. I connect 10 years of architecture and project delivery with hands-on AI prototyping: identifying useful opportunities across design, workplace strategy, engineering, delivery and operations; building lightweight workflows, prompts, prototypes and tools; explaining them clearly; and packaging reusable guidance for colleagues.",
+    body,
+))
+
+story.extend(section("Role-fit capabilities", before=4.4 * mm, after=1.4 * mm))
+skills = Table(
+    [[
+        p("<b>Opportunity Discovery</b><br/>Use-case mapping, problem framing, pilot scope and non-goal definition.", skill_body),
+        p("<b>Workflow Prototyping</b><br/>Lightweight prompts, TaskSpecs, demos, prototypes and practical tools.", skill_body),
+        p("<b>Enablement & Scaling</b><br/>Colleague support, clear AI explanation, guidance, playbooks and evaluation notes.", skill_body),
+    ]],
+    colWidths=[CONTENT_W / 3] * 3,
+)
+skills.setStyle(table_style(
+    ("BACKGROUND", (0, 0), (-1, -1), SOFT),
+    ("BOX", (0, 0), (-1, -1), 0.45, LINE),
+    ("LINEBEFORE", (1, 0), (-1, -1), 0.35, LINE),
+    ("LEFTPADDING", (0, 0), (-1, -1), 6),
+    ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+    ("TOPPADDING", (0, 0), (-1, -1), 5.4),
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 5.4),
+))
+story.append(skills)
+
+story.extend(section("AI project experience", before=4.4 * mm, after=1.4 * mm))
+story.append(project_line(
+    "AI Practice Consultant",
+    "2026.08 / flagship",
+    "Architecture AI pilot that turns SU screenshots, structured prompts, design review and team templates into a reusable AI practice workflow.",
+    "4 SU-to-render cases; TaskSpec; workflow demo; toolkit for colleague adoption.",
+    f"{github_url}/Architecture-AI-Practice-Workspace",
+))
+story.append(project_line(
+    "BuildLoop AI",
+    "2026.08",
+    "Construction early-warning loop connecting drawings, BIM, standards, meetings, messages and site reports into reviewable alerts.",
+    "283 tests passed; evaluation covers evidence location, risk level and approval drafts.",
+    f"{github_url}/BuildLoop-Al",
+))
+story.append(project_line(
+    "PeopleOps",
+    "2026.07",
+    "Traceable HR workflow connecting policy evidence, candidate actions, human approval and audit records.",
+    "47 / 47 unit tests; 25 / 25 offline cases; source-grounded actions with approval before execution.",
+    f"{github_url}/peopleops-intelligence-agent",
+))
+
+story.extend(section("Work experience", before=4.6 * mm, after=1.4 * mm))
+work = Table(
+    [
+        [p("2023 - present", work_meta), p("<b>North China Municipal Engineering Design & Research Institute</b><br/>Project lead", body), p("Public buildings and municipal supporting projects; requirement discovery, cross-discipline coordination and client reporting.", work_scope)],
+        [p("2017 - 2023", work_meta), p("<b>Beijing Turenscape Urban Planning & Design Co., Ltd. / Beijing Institute of Architectural Design Co., Ltd.</b><br/>Project lead", body), p("Cultural tourism, industrial parks, education and public-service projects; scheme development, client communication and review delivery.", work_scope)],
+        [p("2015 - 2017", work_meta), p("<b>Beijing Chuangyan Architecture Design Center</b><br/>Assistant architect", body), p("Concept design and scheme refinement for campus, transportation and medical industrial park projects.", work_scope)],
+    ],
+    colWidths=[30 * mm, 67 * mm, CONTENT_W - 97 * mm],
+)
+work.setStyle(table_style(
+    ("LINEBELOW", (0, 0), (-1, -2), 0.35, LINE),
+    ("TOPPADDING", (0, 0), (-1, -1), 3.0),
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 3.0),
+    ("RIGHTPADDING", (0, 0), (1, -1), 5),
+))
+story.append(work)
+
+representative = Table(
+    [[
+        p("Representative delivery", small),
+        p("<b>Qihe National Modern Agriculture Industrial Park Integrated Service Center</b> / 52,500 sqm site, 29,000 sqm GFA, 103.8 m ring structure; <b>Yueqing Yanshan summit building proposal</b> / 3,657 sqm, first-prize scheme, long-span timber structure.", small),
+    ]],
+    colWidths=[34 * mm, CONTENT_W - 34 * mm],
+)
+representative.setStyle(table_style(
+    ("BACKGROUND", (0, 0), (-1, -1), SOFT),
+    ("TOPPADDING", (0, 0), (-1, -1), 5.6),
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 5.6),
+    ("LEFTPADDING", (0, 0), (-1, -1), 4.5),
+    ("RIGHTPADDING", (0, 0), (-1, -1), 4.5),
+))
+story.append(Spacer(1, 2.5 * mm))
+story.append(representative)
+
+story.extend(section("Education", before=4.4 * mm, after=1.2 * mm))
+education = Table(
+    [[
+        p("<b>Capital University of Economics and Business x aSSIST University</b><br/>M.S. in AI and Big Data Engineering / expected September 2027", body),
+        p("<b>Inner Mongolia University of Science & Technology</b><br/>B.Arch. / 2010 - 2015", body),
+    ]],
+    colWidths=[CONTENT_W * 0.62, CONTENT_W * 0.38],
+)
+education.setStyle(table_style(
+    ("BACKGROUND", (0, 0), (-1, -1), SOFT),
+    ("BOX", (0, 0), (-1, -1), 0.45, LINE),
+    ("LINEBEFORE", (1, 0), (1, 0), 0.35, LINE),
+    ("LEFTPADDING", (0, 0), (-1, -1), 6),
+    ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+    ("TOPPADDING", (0, 0), (-1, -1), 5.8),
+    ("BOTTOMPADDING", (0, 0), (-1, -1), 5.8),
+))
+story.append(education)
+
 
 doc = SimpleDocTemplate(
     str(FINAL_PDF),
@@ -192,220 +232,10 @@ doc = SimpleDocTemplate(
     leftMargin=15 * mm,
     topMargin=10 * mm,
     bottomMargin=12 * mm,
-    title=f"傅孟涵 - {ROLE_TITLE}",
-    author="傅孟涵",
-    subject="一页中文求职简历",
+    title=f"Fu Menghan - {ROLE_TITLE}",
+    author="Fu Menghan",
+    subject="One-page resume",
 )
-
-portfolio_url = "https://dafu110.github.io/agent-portfolio/"
-github_url = "https://github.com/dafu110"
-email_url = "mailto:poeticarch@163.com"
-
-header_copy = [
-    p("傅孟涵", name_style),
-    p(ROLE_TITLE, role_style),
-    Spacer(1, 1.0 * mm),
-    p(
-        "北京 · 可在北京工作 · 随时到岗 · 现场 / 混合 / 远程均可<br/>"
-        "电话 / 微信：15811203776　|　"
-        f'<link href="{email_url}" color="#71717A">poeticarch@163.com</link>　|　'
-        f'<link href="{github_url}" color="#71717A">GitHub</link><br/>'
-        f'作品集：<link href="{portfolio_url}" color="#4F46E5">{portfolio_url}</link>',
-        contact_style,
-    ),
-]
-portrait = Image(str(ASSETS / "profile-portrait.png"), width=20 * mm, height=25 * mm)
-header = Table([[header_copy, portrait]], colWidths=[CONTENT_W - 25 * mm, 25 * mm])
-header.setStyle(
-    table_style(
-        ("ALIGN", (1, 0), (1, 0), "RIGHT"),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
-    )
-)
-
-story = [header, HRFlowable(width="100%", thickness=0.7, color=LINE)]
-
-story.extend(section("个人简介", after=1.25 * mm))
-story.append(p(SUMMARY, body))
-
-work = Table(
-    [
-        career_line(
-            "2023 - 至今",
-            "中国市政工程华北设计研究总院",
-            "项目负责人",
-            "公共建筑与市政配套；负责需求澄清、跨专业协调与甲方汇报。",
-        ),
-        career_line(
-            "2017 - 2023",
-            "北京土人城市规划设计股份有限公司 / 北京市建筑设计研究院股份有限公司",
-            "项目负责人",
-            "文旅、产业园、教育与公共服务项目；推进方案、客户沟通与评审交付。",
-        ),
-        career_line(
-            "2015 - 2017",
-            "北京创研建筑设计中心",
-            "助理建筑师",
-            "参与校园、交通与医疗产业园的概念设计和方案深化。",
-        ),
-    ],
-    colWidths=[38 * mm, 54 * mm, CONTENT_W - 92 * mm],
-)
-work.setStyle(
-    table_style(
-        ("LINEBELOW", (0, 0), (-1, -2), 0.35, LINE),
-        ("TOPPADDING", (0, 0), (-1, -1), 3.1),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 3.1),
-        ("RIGHTPADDING", (0, 0), (1, -1), 5.5),
-    )
-)
-representative_schemes = Table(
-    [
-        [
-            p("代表交付", scheme_label),
-            p(
-                "<b>齐河县国家现代农业产业园综合服务中心</b> · 占地 5.25 万㎡ / 建筑面积 2.9 万㎡ / "
-                "环形结构外径 103.8 米；<b>乐清盐盆山山顶建筑方案</b> · 3657㎡ · 方案设计一等奖 / 大跨度木结构。",
-                scheme_text,
-            ),
-        ],
-    ],
-    colWidths=[26 * mm, CONTENT_W - 26 * mm],
-)
-representative_schemes.setStyle(
-    table_style(
-        ("BACKGROUND", (0, 0), (-1, -1), SOFT),
-        ("TOPPADDING", (0, 0), (-1, -1), 6.5),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 6.5),
-        ("LEFTPADDING", (0, 0), (-1, -1), 4.5),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 4.5),
-    )
-)
-story.extend(section("AI 项目经历", before=4.8 * mm, after=1.8 * mm))
-flagship = Table(
-    [[
-        [p("PeopleOps 智能工作台", h3), p(f"2026.07 · 旗舰项目<br/>{FLAGSHIP_ROLE}", small)],
-        [
-            p(
-                "<b>实现：</b>" + (
-                    "RAG 来源证据、候选人动作、审批恢复、权限与审计进入同一 Agent 工作流。"
-                    if IS_ENGINEER else
-                    "政策证据、候选人动作与人工审批进入同一工作流；高风险动作须人工确认。"
-                ),
-                flagship_body,
-            ),
-            p(
-                "<b>个人贡献：</b>" + (
-                    "独立完成工作流、前后端原型、测试评测；使用 Python / FastAPI / LangGraph / React。"
-                    if IS_ENGINEER else
-                    "独立完成需求拆解、产品与工作流设计、前后端原型、测试评测及演示交付。"
-                ),
-                flagship_body,
-            ),
-            p("<b>验证：</b>47 / 47 项测试、25 / 25 个离线案例通过；仅代表当前原型与样例集。", flagship_body),
-            p(f'<link href="{github_url}/peopleops-intelligence-agent" color="#4F46E5">GitHub 仓库</link>　·　<link href="{portfolio_url}#peopleops-demo" color="#4F46E5">90 秒演示</link>', small),
-        ],
-    ]],
-    colWidths=[45 * mm, CONTENT_W - 45 * mm],
-)
-flagship.setStyle(
-    table_style(
-        ("BACKGROUND", (0, 0), (-1, -1), SOFT),
-        ("BOX", (0, 0), (-1, -1), 0.5, LINE),
-        ("LEFTPADDING", (0, 0), (-1, -1), 7),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 7),
-        ("TOPPADDING", (0, 0), (-1, -1), 6),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
-    )
-)
-story.append(flagship)
-story.append(
-    project_line(
-        "ResearchOps",
-        "2026.07",
-        "实现 Planner、工具执行、审批恢复与运行状态追踪。" if IS_ENGINEER else "将研究任务、工具执行、审批与运行状态放进可观察流程。",
-        "Planner / run_id / 审批恢复；32 个离线案例覆盖主要路径。",
-        f"{github_url}/researchops-agent",
-    )
-)
-story.append(
-    project_line(
-        "KnowFlow",
-        "2026.07",
-        "实现 ACL 先行过滤、检索、引用、拒答与质量门禁。" if IS_ENGINEER else "企业知识检索与引用回答，加入权限过滤、拒答和质量检查。",
-        "ACL / 引用 / 拒答；检索与引用门槛可重复验证。",
-        f"{github_url}/knowflow-rag-agent",
-    )
-)
-story.append(
-    project_line(
-        "Data Analyst",
-        "2026.07",
-        "实现计划审批、只读 SQL / Python 沙箱与报告导出。" if IS_ENGINEER else "受控查询、字段理解、质量检查与多格式报告导出。",
-        "只读 SQL / Docker 隔离；覆盖查询与交付文件生成。",
-        f"{github_url}/data-analyst-agent",
-    )
-)
-
-story.extend(section("工作经历", before=5.0 * mm, after=1.6 * mm))
-story.append(work)
-story.append(representative_schemes)
-
-story.extend(section("专业能力", before=5.4 * mm, after=1.4 * mm))
-if IS_ENGINEER:
-    skill_columns = [
-        "<b>Agent 工程</b><br/>Python / FastAPI、LangGraph、OpenAI Agents SDK、Tool Calling、状态与审批恢复",
-        "<b>RAG 与质量</b><br/>检索 / ACL、引用与拒答、评测回归、权限过滤、审计与安全边界",
-        "<b>应用交付</b><br/>Next.js / React、SQL / Docker、Git；Cursor / Codex 辅助开发、调试、测试与文档",
-    ]
-else:
-    skill_columns = [
-        "<b>产品与方案</b><br/>需求澄清、流程 / 状态、PRD / 原型、方案汇报、交付边界",
-        "<b>AI 应用与治理</b><br/>RAG / Agent、Tool Calling、人工审批、权限过滤、评测回归、审计",
-        "<b>工程与 AI Coding</b><br/>Python / FastAPI、React、LangGraph / Agents SDK、SQL / Docker；Cursor / Codex",
-    ]
-skills = Table(
-    [[
-        p(skill_columns[0], skill_body),
-        p(skill_columns[1], skill_body),
-        p(skill_columns[2], skill_body),
-    ]],
-    colWidths=[CONTENT_W / 3] * 3,
-)
-skills.setStyle(
-    table_style(
-        ("BACKGROUND", (0, 0), (-1, -1), SOFT),
-        ("BOX", (0, 0), (-1, -1), 0.45, LINE),
-        ("LINEBEFORE", (1, 0), (-1, -1), 0.35, LINE),
-        ("LEFTPADDING", (0, 0), (-1, -1), 6),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
-        ("TOPPADDING", (0, 0), (-1, -1), 5.6),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 5.6),
-    )
-)
-story.append(skills)
-
-story.extend(section("教育背景", before=5.6 * mm, after=1.2 * mm))
-education = Table(
-    [[
-        p("<b>首都经济贸易大学 × aSSIST University</b><br/>人工智能与大数据工学硕士 · 拟于 2027 年 9 月毕业", body),
-        p("<b>内蒙古科技大学</b><br/>建筑学本科 · 2010 - 2015", body),
-    ]],
-    colWidths=[CONTENT_W * 0.62, CONTENT_W * 0.38],
-)
-education.setStyle(
-    table_style(
-        ("BACKGROUND", (0, 0), (-1, -1), SOFT),
-        ("BOX", (0, 0), (-1, -1), 0.45, LINE),
-        ("LINEBEFORE", (1, 0), (1, 0), 0.35, LINE),
-        ("LEFTPADDING", (0, 0), (-1, -1), 6),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 6),
-        ("TOPPADDING", (0, 0), (-1, -1), 6.0),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 6.0),
-    )
-)
-story.append(KeepTogether(education))
-
 doc.build(story, onFirstPage=draw_footer, onLaterPages=draw_footer)
 shutil.copyfile(FINAL_PDF, WEB_RESUME)
 print(FINAL_PDF)

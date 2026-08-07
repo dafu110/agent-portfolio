@@ -480,6 +480,9 @@
 }
 
 .case-demo-video { --product-frame-ratio: 2928 / 1582; --video-fit: contain; margin-block: 20px; padding-inline: 0; }
+.ai-practice-video { --product-frame-ratio: 1920 / 1200; --video-fit: contain; }
+.buildloop-demo-video { --product-frame-ratio: 1920 / 1200; --video-fit: contain; }
+.peopleops-demo-video { --product-frame-ratio: 16 / 9; --video-fit: contain; }
 
 .capability-section {
   border-block: 1px solid var(--line);

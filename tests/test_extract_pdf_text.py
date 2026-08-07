@@ -1,4 +1,4 @@
-import tempfile
+﻿import tempfile
 import unittest
 from importlib.util import find_spec
 from pathlib import Path
@@ -21,7 +21,9 @@ class ExtractPdfTextTests(unittest.TestCase):
     def test_extracts_the_public_resume(self):
         pages = extract_pdf_text(Path(__file__).resolve().parents[1] / "assets" / "resume.pdf")
         self.assertEqual(len(pages), 1)
-        self.assertIn("傅孟涵", pages[0])
+        self.assertIn("Fu Menghan", pages[0])
+        self.assertIn("AI Practice Consultant", pages[0])
+        self.assertIn("Profile summary", pages[0])
 
 
 if __name__ == "__main__":

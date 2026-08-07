@@ -1,0 +1,19 @@
+﻿WEBVTT
+
+00:00:00.000 --> 00:00:12.000
+Open the PeopleOps Intelligence Agent and choose an HR policy Q&A task. The recording uses a read-only demo environment.
+
+00:00:12.000 --> 00:00:25.000
+Ask a travel reimbursement question. The answer shows reviewable policy sources, cited excerpts and page references.
+
+00:00:25.000 --> 00:00:40.000
+Request a candidate interview. The tool returns approval mode, and email, calendar and ATS execution remain blocked.
+
+00:00:40.000 --> 00:00:58.000
+After submitting the action, the task waits for approval. No external action runs before explicit HRBP approval.
+
+00:00:58.000 --> 00:01:14.000
+The task record keeps the original input, current state, run time and audit-chain validation result.
+
+00:01:14.000 --> 00:01:30.000
+System settings show approval-tool mode, hashed audit chain and local demo boundaries.
