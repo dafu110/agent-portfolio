@@ -130,7 +130,7 @@ story = [header, HRFlowable(width="100%", thickness=0.7, color=LINE)]
 
 story.extend(section("Profile summary", before=2.6 * mm, after=0.9 * mm))
 story.append(p(
-    "AI Practice Consultant for practical, people-facing AI adoption. I connect 10 years of architecture and project delivery with hands-on AI prototyping: identifying useful opportunities across design, workplace strategy, engineering, delivery and operations; building lightweight workflows, prompts, prototypes and tools; explaining them clearly; and packaging reusable guidance for colleagues.",
+    "AI Practice Consultant for practical, people-facing AI adoption. I connect 10 years of architecture and project delivery with hands-on AI prototyping: identifying useful opportunities across design, workplace strategy, engineering, delivery and operations; building lightweight demos, prompts, prototypes and tools; explaining them clearly; and packaging reusable guidance for colleague trials.",
     body,
 ))
 
@@ -158,8 +158,8 @@ story.extend(section("AI project experience", before=2.9 * mm, after=0.9 * mm))
 story.append(project_line(
     "ArchMind Architecture AI Practice Workspace",
     "2026.08 / flagship",
-    "Architecture AI pilot that turns SU screenshots, structured prompts, design review and team templates into a reusable AI practice workflow.",
-    "4 SU-to-render cases; TaskSpec; workflow demo; toolkit for colleague adoption.",
+    "Architecture AI demo that turns SU screenshots, structured prompts, design review and team templates into a reusable AI practice example.",
+    "4 SU-to-render cases; TaskSpec; demo video; toolkit for colleague trials.",
     f"{github_url}/Architecture-AI-Practice-Workspace",
 ))
 story.append(project_line(
