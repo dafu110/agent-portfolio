@@ -156,9 +156,9 @@ story.append(skills)
 
 story.extend(section("AI project experience", before=2.9 * mm, after=0.9 * mm))
 story.append(project_line(
-    "ArchMind Architecture AI Practice Workspace",
+    "ArchMind",
     "2026.08 / flagship",
-    "Architecture AI demo that turns SU screenshots, structured prompts, design review and team templates into a reusable AI practice example.",
+    "Architecture AI Practice Workspace demo that turns SU screenshots, structured prompts, design review and team templates into a reusable AI practice example.",
     "4 SU-to-render cases; TaskSpec; demo video; toolkit for colleague trials.",
     f"{github_url}/Architecture-AI-Practice-Workspace",
 ))
